@@ -7,6 +7,7 @@ const weatherFeelsLikeElement = document.querySelector(".weather-feels-like");
 const weatherWindSpeedElement = document.querySelector(".weather-wind-speed");
 const weatherPrecipitationElement = document.querySelector(".weather-precipitation");
 const weatherHumidityElement = document.querySelector(".weather-humidity");
+const weatherErrorElement = document.querySelector(".weather-error");
 
 locationInputElement.addEventListener("change", changeLocation);
 
@@ -15,11 +16,17 @@ async function getCoordinatesData(location) {
     try {
         const response = await fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${location}&appid=61d324f1999587686e64cc75ed85aad0`);
         const data = await response.json();
-    
-        return data;
+
+        if (data.length === 0) throw 'Location not found. Maybe you spelt it wrong?';
+        else return data;
     }
     catch(error) {
-        console.log("Couldn't get the coordinates", error);
+        console.log(error);
+
+        weatherErrorElement.textContent = error;
+
+        weatherDataElement.style.opacity = 0;
+        weatherErrorElement.style.opacity = 1;
     }
 }
 
@@ -33,6 +40,11 @@ async function getWeatherData(lat, lon) {
     }
     catch(error) {
         console.log("Couldn't get the weather data", error);
+
+        weatherErrorElement.textContent = "Something went wrong.. maybe the API hit its limit. Try again tomorrow."
+
+        weatherDataElement.style.opacity = 0;
+        weatherErrorElement.style.opacity = 1;
     }
 }
 
@@ -54,4 +66,5 @@ function displayWeatherData(data) {
     weatherHumidityElement.textContent = data.current.humidity + " %";
     weatherPrecipitationElement.textContent = data.hourly[0].pop * 100 + " %";
     weatherDataElement.style.opacity = 1;
+    weatherErrorElement.style.opacity = 0;
 }
