@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Weather</title>
+    <link href="normalize.css" rel="stylesheet">
     <link href="index.css" rel="stylesheet">
     <script src="index.js" defer></script>
 </head>
@@ -15,5 +16,41 @@
             <input type="text">
         </fieldset>
     </form>
+    <div class="weather-container">
+        <h1 class="weather-location"></h1>
+        <div class="weather-data-container">
+            <h2 class="weather-description"></h2>
+            <div class="weather-temperature-container">
+                <div class="weather-data-snippet">
+                    <p class="weather-snippet-title">Temperature:</p>
+                    <div class="weather-temperature">
+                        <p class="weather-actual-temperature"></p>
+                        <p>&#8451</p>
+                    </div>
+                </div>
+                <div class="weather-data-snippet">
+                    <p class="weather-snippet-title">Feels like:</p>
+                    <div class="weather-temperature">
+                        <p class="weather-feels-like"></p>
+                        <p>&#8451</p>
+                    </div>
+                </div>
+            </div>
+            <div class="weather-miscellaneous-container">
+                <div class="weather-data-snippet">
+                    <p class="weather-snippet-title">Wind:</p>
+                    <p class="weather-wind-speed"></p>
+                </div>
+                <div class="weather-data-snippet">
+                    <p class="weather-snippet-title">Humidity:</p>
+                    <p class="weather-humidity"></p>
+                </div>
+                <div class="weather-data-snippet">
+                    <p class="weather-snippet-title">Precipitation</p>
+                    <p class="weather-precipitation"></p>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
