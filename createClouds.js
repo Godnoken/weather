@@ -20,11 +20,13 @@ export function createClouds(amountOfClouds) {
 
     const timeline = gsap.timeline();
 
-    let randomGrayValue = random(140, 190);
+    let randomGrayValue = random(150, 190);
     let fill = `rgb(${randomGrayValue}, ${randomGrayValue}, ${randomGrayValue})`;
 
     const x = random(0, window.innerWidth);
     const y = random(0, window.innerHeight);
+    const width = 400;
+    const height = 200;
     const moveToX = -window.innerWidth + random(0, window.innerWidth) * 2;
     const moveToY = -window.innerHeight + random(0, window.innerHeight) * 2;
     const duration = random(200, 1000);
@@ -32,10 +34,10 @@ export function createClouds(amountOfClouds) {
 
     // Initializes position, size, color etc
     timeline.set(newSvg, {
-      x: x - 200,
-      y: y - 100,
-      width: 400,
-      height: 200,
+      x: x - width / 2,
+      y: y - height / 2,
+      width: width,
+      height: height,
       fill: fill,
       opacity: 0,
     });
@@ -70,34 +72,39 @@ export function createClouds(amountOfClouds) {
       0
     );
 
+    const baseCloudWidth = random(160, 300);
+    const baseCloudHeight = random(40, 80);
+
     const baseCloudObject = {
-      x: x,
-      y: y,
+      x: 0 + (width - baseCloudWidth) / 2,
+      y: height - baseCloudHeight,
       rx: 40,
-      width: random(160, 300),
-      height: random(40, 80),
+      ry: 40,
+      width: baseCloudWidth,
+      height: baseCloudHeight,
       fill: fill,
     };
 
     for (let j = 0; j < 6; j++) {
-      let randomGrayValue = random(140, 190);
+      let randomGrayValue = random(150, 190);
       let fill = `rgb(${randomGrayValue}, ${randomGrayValue}, ${randomGrayValue})`;
+
+      const cloudRy = random(30, 60)
 
       const extraCloud = createEllipse(
         {
-          x: x + random(-baseCloudObject.width / 4, baseCloudObject.width / 4),
-          y: y + random(-35, -50),
+          x: 0 + random(125, 275),
+          y: 180 - cloudRy,
           rx: random(30, 60),
-          ry: random(30, 60),
+          ry: cloudRy,
           fill: fill,
-        },
-        timeline
+        }
       );
 
       newSvg.appendChild(extraCloud);
     }
 
-    const baseCloud = createRect(baseCloudObject, timeline);
+    const baseCloud = createRect(baseCloudObject);
 
     animatedBackgroundElement.appendChild(newSvg);
     newSvg.appendChild(baseCloud);
