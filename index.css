@@ -56,9 +56,15 @@ html {
     display: flex;
     flex-direction: column;
     padding: 8px;
-    background-color: rgba(34, 34, 34, 0.94);
+    background-color: rgba(10, 10, 10, 0.94);
     border: white 2px solid;
     border-radius: 12px;
+    opacity: 0.2;
+    transition: opacity 0.5s;
+}
+
+.weather-container:hover {
+    opacity: 0.96;
 }
 
 .weather-location {

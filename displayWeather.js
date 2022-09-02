@@ -3,8 +3,9 @@ import { createClouds } from "./createClouds.js";
 import { removeAllElementChildren } from "./utils.js";
 
 const animatedBackgroundElement = document.querySelector(
-    ".animated-background"
-  );
+  ".animated-background"
+);
+const cloudElementContainer = document.querySelector(".clouds");
 const locationInputElement = document.querySelector(".location-input");
 const locationHeaderElement = document.querySelector(".weather-location");
 const weatherDataElement = document.querySelector(".weather-data-container");
@@ -44,7 +45,8 @@ export function displayWeatherData(data) {
 function displayWeatherAnimation(data) {
   const svgData = {
     amountOfClouds: data.current.clouds,
-    amountOfRain: data.hourly[0].pop * 100,
+    amountOfRainfields: data.hourly[0].pop * 10,
+    amountOfRaindrops: data.hourly[0].pop * 100
   };
 
   /*
@@ -78,7 +80,7 @@ function displayWeatherAnimation(data) {
   clearIntervals();
 
   // Clear all remaining SVG's and set counts back to 0
-  removeAllElementChildren(animatedBackgroundElement);
+  removeAllElementChildren(cloudElementContainer);
   resetAllSVGCounts();
 
   // Create new location's SVG shapes
@@ -94,9 +96,9 @@ function resetAllSVGCounts() {
 }
 
 function createSVGShapes(svgData) {
-  createClouds(svgData.amountOfClouds);
+  createClouds(svgData.amountOfClouds, svgData.amountOfRainfields, svgData.amountOfRaindrops);
 
   cloudsInterval = setInterval(() => {
-    createClouds(svgData.amountOfClouds);
+    createClouds(svgData.amountOfClouds, svgData.amountOfRainfields, svgData.amountOfRaindrops);
   }, 8000);
 }
