@@ -2,9 +2,6 @@ import { global } from "./index.js";
 import { createClouds } from "./createClouds.js";
 import { removeAllElementChildren } from "./utils.js";
 
-const animatedBackgroundElement = document.querySelector(
-  ".animated-background"
-);
 const cloudElementContainer = document.querySelector(".clouds");
 const locationInputElement = document.querySelector(".location-input");
 const locationHeaderElement = document.querySelector(".weather-location");
@@ -22,8 +19,6 @@ const weatherPrecipitationElement = document.querySelector(
 );
 const weatherHumidityElement = document.querySelector(".weather-humidity");
 const weatherErrorElement = document.querySelector(".weather-error");
-
-let cloudsInterval;
 
 export function displayWeatherData(data) {
   locationHeaderElement.textContent = locationInputElement.value.toUpperCase();
@@ -46,7 +41,7 @@ function displayWeatherAnimation(data) {
   const svgData = {
     amountOfClouds: data.current.clouds,
     amountOfRainfields: data.hourly[0].pop * 10,
-    amountOfRaindrops: data.hourly[0].pop * 100
+    amountOfRaindrops: data.hourly[0].pop * 100,
   };
 
   /*
@@ -75,9 +70,20 @@ function displayWeatherAnimation(data) {
       }
       */
 
-  // Clear all svg creation intervals so we don't bring another location's weather
-  // when searching for a new one
-  clearIntervals();
+  // Debugging
+
+  /*
+  setInterval(() => {
+    console.log(
+      global.amountOfRaindropsOnScreen,
+      global.amountOfRainOnScreen,
+      global.amountOfCloudsOnScreen
+    );
+  }, 100);
+ */
+
+  // Kill all tweens before removing the DOM elements
+  killAllTweens();
 
   // Clear all remaining SVG's and set counts back to 0
   removeAllElementChildren(cloudElementContainer);
@@ -87,18 +93,22 @@ function displayWeatherAnimation(data) {
   createSVGShapes(svgData);
 }
 
-function clearIntervals() {
-  clearInterval(cloudsInterval);
-}
-
 function resetAllSVGCounts() {
   global.amountOfCloudsOnScreen = 0;
+  global.amountOfRainOnScreen = 0;
+  global.amountOfRaindropsOnScreen = 0;
 }
 
 function createSVGShapes(svgData) {
-  createClouds(svgData.amountOfClouds, svgData.amountOfRainfields, svgData.amountOfRaindrops);
+  createClouds(
+    svgData.amountOfClouds,
+    svgData.amountOfRainfields,
+    svgData.amountOfRaindrops
+  );
+}
 
-  cloudsInterval = setInterval(() => {
-    createClouds(svgData.amountOfClouds, svgData.amountOfRainfields, svgData.amountOfRaindrops);
-  }, 8000);
+function killAllTweens() {
+  for (let i = 0; i < cloudElementContainer.children.length; i++) {
+    gsap.killTweensOf(cloudElementContainer.children[i]);
+  }
 }

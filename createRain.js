@@ -3,19 +3,22 @@ import { random } from "./utils.js";
 import { createPath } from "./createSvgShapes.js";
 
 export function createRainfield(cloud, amountOfRaindrops) {
-  const newSvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  const rainfieldSVG = document.createElementNS(
+    "http://www.w3.org/2000/svg",
+    "svg"
+  );
 
   // SVG HAS to be absolute otherwise the animation jumps on DOM deletion
-  newSvg.style.position = "absolute";
-  newSvg.style.overflow = "visible";
+  rainfieldSVG.style.position = "absolute";
+  rainfieldSVG.style.overflow = "visible";
 
-  cloud.appendChild(newSvg);
+  cloud.appendChild(rainfieldSVG);
 
   let amountOfRaindropsInCloud = 0;
 
-  for (let i = 0; i < Math.min(amountOfRaindrops, 10); i++) {
-    if (amountOfRaindrops > global.amountOfRaindropsOnScreen) {
-      createRaindrop(newSvg);
+  for (let i = 0; i < Math.min(amountOfRaindrops / 2, 5); i++) {
+    if (amountOfRaindrops / 2 > global.amountOfRaindropsOnScreen) {
+      createRaindrop(rainfieldSVG);
       global.amountOfRaindropsOnScreen++;
       amountOfRaindropsInCloud++;
       cloud.dataset.raindrops = amountOfRaindropsInCloud;
@@ -24,20 +27,61 @@ export function createRainfield(cloud, amountOfRaindrops) {
 
   global.amountOfRainOnScreen++;
 
-  return newSvg;
+  return rainfieldSVG;
 }
 
 export function createRaindrop(rainfield) {
-  const raindrop = createPath({
-    d: `m${random(125, 275)},${random(
-      150,
-      225
-    )}c0,0 -6.96763,5.04017 -7.62085,11.97041c-0.65322,6.93024 6.31441,8.40028 7.62085,8.19028c7.83858,0.21001 6.96763,-6.51022 6.96763,-7.35025c0,-9.03031 -6.96763,-12.81043 -6.96763,-12.81043z`,
-    fill: `rgb(0, 0, ${random(128, 255)})`,
-    moveToY: random(window.innerHeight + 2000, window.innerHeight + 6000),
-    moveDuration: random(250, 500),
-    delay: random(4, 12),
+  const raindropPath = createPath();
+
+  const d = `m${random(125, 275)},${random(
+    150,
+    225
+  )}c0,0 -6.96763,5.04017 -7.62085,11.97041c-0.65322,6.93024 6.31441,8.40028 7.62085,8.19028c7.83858,0.21001 6.96763,-6.51022 6.96763,-7.35025c0,-9.03031 -6.96763,-12.81043 -6.96763,-12.81043z`;
+  const fill = `rgb(0, 0, ${random(128, 255)})`;
+  const moveToY = random(window.innerHeight + 2000, window.innerHeight + 6000);
+  const moveDuration = random(250, 500);
+  const delay = random(4, 12);
+
+  const timeline = gsap.timeline();
+
+  timeline.set(raindropPath, {
+    attr: { d: d },
+    fill: fill,
+    opacity: 0,
   });
 
-  rainfield.appendChild(raindrop);
+  timeline.to(raindropPath, {
+    duration: 3,
+    opacity: 1,
+  });
+
+  timeline.to(
+    raindropPath,
+    {
+      y: `+=${moveToY}`,
+      duration: moveDuration,
+      ease: "none",
+    },
+    0
+  );
+
+  timeline.to(
+    raindropPath,
+    {
+      delay: delay,
+      opacity: 0,
+      duration: 2,
+      onComplete: respawnRaindrop,
+    },
+    0
+  );
+
+  rainfield.appendChild(raindropPath);
+
+  function respawnRaindrop() {
+    const rainfield = raindropPath.parentElement;
+    timeline.killTweensOf(raindropPath);
+    raindropPath.remove();
+    createRaindrop(rainfield);
+  }
 }
