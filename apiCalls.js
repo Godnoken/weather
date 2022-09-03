@@ -26,7 +26,7 @@ async function getCoordinatesData(location) {
 async function getWeatherData(lat, lon) {
   try {
     const response = await fetch(
-      `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&exclude=minutely,daily,alerts&units=metric&appid=61d324f1999587686e64cc75ed85aad0`
+      `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&exclude=minutely,daily,alerts&units=metric&appid=61d324f1999587686e64cc75ed85aad0` {mode: "cors"}
     );
     const data = await response.json();
 
