@@ -1,6 +1,6 @@
 import { global } from "./index.js";
 import { createClouds } from "./createClouds.js";
-import { removeAllElementChildren } from "./utils.js";
+import { getHoursAndMinutesFromUnix, removeAllElementChildren } from "./utils.js";
 
 const cloudElementContainer = document.querySelector(".clouds");
 const locationInputElement = document.querySelector(".location-input");
@@ -81,6 +81,11 @@ function displayWeatherAnimation(data) {
     );
   }, 100);
  */
+
+  const sunriseTime = getHoursAndMinutesFromUnix(data.current.sunrise);
+  const sunsetTime = getHoursAndMinutesFromUnix(data.current.sunset);
+
+  console.log(sunriseTime, sunsetTime)
 
   // Kill all tweens before removing the DOM elements
   killAllTweens();

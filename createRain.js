@@ -43,7 +43,8 @@ export function createRaindrop(rainfield) {
     150,
     225
   )}c0,0 -6.96763,5.04017 -7.62085,11.97041c-0.65322,6.93024 6.31441,8.40028 7.62085,8.19028c7.83858,0.21001 6.96763,-6.51022 6.96763,-7.35025c0,-9.03031 -6.96763,-12.81043 -6.96763,-12.81043z`;
-  const fill = `rgb(0, 0, ${random(128, 255)})`;
+  const fill = `rgb(${random(0, 50)}, ${random(0, 200)}, ${random(230, 255)})`;
+  //const fill = `rgb(0, 0, ${random(200, 255)})`;
   const moveToY = random(window.innerHeight + 2000, window.innerHeight + 6000);
   const moveDuration = random(250, 500);
   const delay = random(4, 12);

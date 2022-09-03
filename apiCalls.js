@@ -6,7 +6,7 @@ const weatherDataElement = document.querySelector(".weather-data-container");
 async function getCoordinatesData(location) {
   try {
     const response = await fetch(
-      `http://api.openweathermap.org/geo/1.0/direct?q=${location}&appid=61d324f1999587686e64cc75ed85aad0`
+      `http://api.openweathermap.org/geo/1.0/direct?q=${location}&appid=61d324f1999587686e64cc75ed85aad0`, {mode: "cors"}
     );
     const data = await response.json();
 
