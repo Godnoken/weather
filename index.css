@@ -58,7 +58,7 @@ html {
     flex-direction: column;
     padding: 8px;
     background-color: rgba(10, 10, 10, 0.94);
-    border: white 2px solid;
+    border: rgb(192, 192, 192) 2px solid;
     border-radius: 12px;
     opacity: 0.2;
     transition: opacity 0.5s;
