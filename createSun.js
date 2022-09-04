@@ -13,15 +13,16 @@ export function moveSun(timeData) {
     sunsetTimeInDecimals = Number(sunsetTimeInDecimals) + 24;
   }
 
-  const currentTime = timeData.currentTime;
-  const amountOfSunshine = sunsetTimeInDecimals - sunriseTimeInDecimals;
-  const timeSinceSunrise = currentTime - sunriseTimeInDecimals;
-  const currentSunPosition = timeSinceSunrise / amountOfSunshine;
+  const currentTimeInDecimals = timeData.currentTime;
+  const hoursOfSunshine = sunsetTimeInDecimals - sunriseTimeInDecimals;
+  const hoursSinceSunrise = currentTimeInDecimals - sunriseTimeInDecimals;
+  const timeUntilSunsetInSeconds = (sunsetTimeInDecimals - currentTimeInDecimals) * 3600;
+  const currentSunPosition = hoursSinceSunrise / hoursOfSunshine;
 
   console.log(
     sunriseTimeInDecimals,
     sunsetTimeInDecimals,
-    currentTime,
+    currentTimeInDecimals,
     currentSunPosition
   );
 
@@ -82,7 +83,7 @@ export function moveSun(timeData) {
 
   sunTimeline.to(sunElement, {
     motionPath: motionPath,
-    duration: 10000,
+    duration: timeUntilSunsetInSeconds,
     ease: "none",
   });
 
