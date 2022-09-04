@@ -1,4 +1,7 @@
 import { changeLocation } from "./apiCalls.js";
+import { moveSun } from "./createSun.js";
+
+gsap.registerPlugin(MotionPathPlugin);
 
 const locationInputElement = document.querySelector(".location-input");
 locationInputElement.addEventListener("change", changeLocation);
@@ -12,3 +15,5 @@ export let global = {
     amountOfRainOnScreen: amountOfRainOnScreen,
     amountOfRaindropsOnScreen: amountOfRaindropsOnScreen
 }
+
+//moveSun();

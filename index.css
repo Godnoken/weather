@@ -7,7 +7,7 @@ html {
     position: fixed;
     height: CALC(100% + 1px);
     width: 100%;
-    background-color: rgb(10, 10, 10);
+    background-color: lightblue;
     color: white;
 }
 
@@ -31,6 +31,33 @@ html {
     background-color: transparent;
     color: white;
 }
+
+.sun {
+    background: white;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    box-shadow: 0 0 20px white, 0 0 30px white, 0 0 40px white, 0 0 50px white, 0 0 60px white, 0 0 100px white;
+    transform-origin: center;
+}
+
+.ray {
+    height:170px;
+    width:30px;
+   -webkit-transform: rotate(180deg);
+    background: -webkit-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,0.8) 50%, rgba(255,255,255,0) 100%);
+    background: linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,0.8) 50%, rgba(255,255,255,0) 100%); 
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    border-radius: 50%;
+    transform-origin: 0 0;
+    opacity: 0.1;
+}
+
+.ray:nth-child(odd){
+    transform: rotate(180deg);
+  }
 
 .animated-background {
     position: absolute;

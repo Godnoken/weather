@@ -1,6 +1,7 @@
 import { global } from "./index.js";
 import { createClouds } from "./createClouds.js";
 import { getHoursAndMinutesFromUnix, removeAllElementChildren } from "./utils.js";
+import { moveSun } from "./createSun.js";
 
 const cloudElementContainer = document.querySelector(".clouds");
 const locationInputElement = document.querySelector(".location-input");
@@ -82,10 +83,13 @@ function displayWeatherAnimation(data) {
   }, 100);
  */
 
-  const sunriseTime = getHoursAndMinutesFromUnix(data.current.sunrise);
-  const sunsetTime = getHoursAndMinutesFromUnix(data.current.sunset);
+  const timeData = {
+    sunriseTime: getHoursAndMinutesFromUnix(data.current.sunrise),
+    sunsetTime: getHoursAndMinutesFromUnix(data.current.sunset),
+    currentTime: new Date().getUTCHours() + data.timezone_offset / 3600 + "." + new Date().getUTCMinutes()
+  }
 
-  console.log(sunriseTime, sunsetTime)
+  moveSun(timeData);
 
   // Kill all tweens before removing the DOM elements
   killAllTweens();
