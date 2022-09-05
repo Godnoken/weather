@@ -6,20 +6,21 @@ const animatedBackgroundElement = document.querySelector(".animated-background")
 export function createSun(timeData) {
   const sunElement = document.createElement("div");
   sunElement.classList.add("sun");
-
+  
   const sunriseTimeInSeconds = convertDurationtoSeconds(timeData.sunriseTime);
   const sunsetTimeInSeconds = convertDurationtoSeconds(timeData.sunsetTime, true);
   const currentTimeInSeconds = timeData.sunriseTime > timeData.currentTime ? convertDurationtoSeconds(timeData.currentTime, true) : convertDurationtoSeconds(timeData.currentTime);
 
   const secondsSinceSunrise = Math.max(currentTimeInSeconds, sunriseTimeInSeconds) - Math.min(currentTimeInSeconds, sunriseTimeInSeconds);
   const secondsOfSunshine = Math.max(sunsetTimeInSeconds, sunriseTimeInSeconds) - Math.min(sunsetTimeInSeconds, sunriseTimeInSeconds);
-  const timeUntilSunsetInSeconds = Math.max(currentTimeInSeconds, sunsetTimeInSeconds) - Math.min(currentTimeInSeconds, sunsetTimeInSeconds);
   const currentSunPosition = secondsSinceSunrise / secondsOfSunshine;
 
   if (currentSunPosition >= 1) {
     createMoon(timeData);
     return;
   }
+
+  animatedBackgroundElement.appendChild(sunElement);
   const sunTimeline = gsap.timeline();
 
   const windowWidth = window.innerWidth;
@@ -43,7 +44,7 @@ export function createSun(timeData) {
     { x: windowWidth / 1.25 - sunElementWidth, y: windowHeight / 3 },
     {
       x: windowWidth - sunElementWidth / 2,
-      y: windowHeight + sunElementHeight,
+      y: windowHeight + sunElementHeight / 2,
     },
   ];
 
@@ -61,7 +62,7 @@ export function createSun(timeData) {
 
   sunTimeline.to(sunElement, {
     motionPath: motionPath,
-    duration: timeUntilSunsetInSeconds,
+    duration: secondsOfSunshine,
     ease: "none",
     onComplete: swapFromSunToMoon,
     onCompleteParams: [sunElement, timeData]
@@ -73,12 +74,10 @@ export function createSun(timeData) {
   // Separate timeline due to progress being set above
   // in turn cancelling the opacity animation
   gsap.to(sunElement, {
-    duration: 1,
+    duration: 4,
     opacity: 1
   })
 
-
-  animatedBackgroundElement.appendChild(sunElement);
 
   createSunRays();
 
@@ -139,14 +138,14 @@ export function createMoon(timeData) {
   
   const secondsSinceSunset = Math.max(currentTimeInSeconds, sunsetTimeInSeconds) - Math.min(currentTimeInSeconds, sunsetTimeInSeconds);
   const secondsOfMoonlight = Math.max(sunsetTimeInSeconds, sunriseTimeInSeconds) - Math.min(sunsetTimeInSeconds, sunriseTimeInSeconds);
-  const timeUntilSunriseInSeconds = Math.max(currentTimeInSeconds, sunriseTimeInSeconds) - Math.min(currentTimeInSeconds, sunriseTimeInSeconds);
   const currentMoonPosition = secondsSinceSunset / secondsOfMoonlight;
 
   if (currentMoonPosition >= 1) {
     createMoon(timeData);
     return;
   }
-  
+
+  animatedBackgroundElement.appendChild(moonElement);
   const moonTimeline = gsap.timeline();
   
   const windowWidth = window.innerWidth;
@@ -154,7 +153,6 @@ export function createMoon(timeData) {
   const moonElementWidth = moonElement.offsetWidth;
   const moonElementHeight = moonElement.offsetHeight;
   
-
   moonTimeline.set(moonElement, {
     x: 0 - moonElementWidth / 2,
     y: windowHeight + moonElementHeight,
@@ -189,7 +187,7 @@ export function createMoon(timeData) {
 
   moonTimeline.to(moonElement, {
     motionPath: motionPath,
-    duration: timeUntilSunriseInSeconds,
+    duration: secondsOfMoonlight,
     ease: "none",
     onComplete: swapFromMoonToSun,
     onCompleteParams: [moonElement, timeData]
@@ -201,12 +199,9 @@ export function createMoon(timeData) {
   // Separate timeline due to progress being set above
   // in turn cancelling the opacity animation
   gsap.to(moonElement, {
-    duration: 1,
+    duration: 4,
     opacity: 1
   })
-
-
-  animatedBackgroundElement.appendChild(moonElement);
 
   createMoonRays();
 
