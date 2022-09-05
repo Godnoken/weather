@@ -15,6 +15,7 @@ export function createSun(timeData) {
   const secondsOfSunshine = Math.max(sunsetTimeInSeconds, sunriseTimeInSeconds) - Math.min(sunsetTimeInSeconds, sunriseTimeInSeconds);
   const currentSunPosition = secondsSinceSunrise / secondsOfSunshine;
 
+
   if (currentSunPosition >= 1) {
     createMoon(timeData);
     return;
@@ -30,21 +31,21 @@ export function createSun(timeData) {
 
   sunTimeline.set(sunElement, {
     x: 0 - sunElementWidth / 2,
-    y: windowHeight + sunElementHeight,
+    y: windowHeight,
     opacity: 0
   });
 
   const path = [
     {
       x: 0 - sunElementWidth / 2,
-      y: windowHeight + sunElementHeight
+      y: windowHeight
     },
     { x: windowWidth - windowWidth / 1.25, y: windowHeight / 3 },
     { x: windowWidth / 2 - sunElementWidth, y: windowHeight / 10 },
     { x: windowWidth / 1.25 - sunElementWidth, y: windowHeight / 3 },
     {
       x: windowWidth - sunElementWidth / 2,
-      y: windowHeight + sunElementHeight / 2,
+      y: windowHeight,
     },
   ];
 
@@ -132,7 +133,7 @@ export function createMoon(timeData) {
   moonElement.classList.add("moon");
 
   
-  const sunriseTimeInSeconds = convertDurationtoSeconds(timeData.sunriseTime);
+  const sunriseTimeInSeconds = convertDurationtoSeconds(timeData.sunriseTime, true);
   const sunsetTimeInSeconds = convertDurationtoSeconds(timeData.sunsetTime, true);
   const currentTimeInSeconds = convertDurationtoSeconds(timeData.currentTime, true);
   
@@ -155,21 +156,21 @@ export function createMoon(timeData) {
   
   moonTimeline.set(moonElement, {
     x: 0 - moonElementWidth / 2,
-    y: windowHeight + moonElementHeight,
+    y: windowHeight,
     opacity: 0
   });
 
   const path = [
     {
       x: 0 - moonElementWidth / 2,
-      y: windowHeight + moonElementHeight
+      y: windowHeight
     },
     { x: windowWidth - windowWidth / 1.25, y: windowHeight / 3 },
     { x: windowWidth / 2 - moonElementWidth, y: windowHeight / 10 },
     { x: windowWidth / 1.25 - moonElementWidth, y: windowHeight / 3 },
     {
       x: windowWidth - moonElementWidth / 2,
-      y: windowHeight + moonElementHeight,
+      y: windowHeight,
     },
   ];
 
