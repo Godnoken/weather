@@ -33,6 +33,7 @@ html {
 }
 
 .sun {
+    position: absolute;
     background: white;
     width: 100px;
     height: 100px;
@@ -41,6 +42,15 @@ html {
     transform-origin: center;
 }
 
+.moon {
+    position: absolute;
+    background: gray;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    box-shadow: 0 0 20px white, 0 0 30px white, 0 0 40px white, 0 0 50px white, 0 0 60px white, 0 0 100px white;
+    transform-origin: center;
+}
 .ray {
     height:170px;
     width:30px;

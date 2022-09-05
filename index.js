@@ -1,5 +1,4 @@
 import { changeLocation } from "./apiCalls.js";
-import { moveSun } from "./createSun.js";
 
 gsap.registerPlugin(MotionPathPlugin);
 
@@ -15,5 +14,3 @@ export let global = {
     amountOfRainOnScreen: amountOfRainOnScreen,
     amountOfRaindropsOnScreen: amountOfRaindropsOnScreen
 }
-
-//moveSun();

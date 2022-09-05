@@ -1,54 +1,49 @@
+import { convertDurationtoSeconds } from "./utils.js";
+
 //const sunElement = document.querySelector(".sun");
 const animatedBackgroundElement = document.querySelector(".animated-background")
 
-export function moveSun(timeData) {
+export function createSun(timeData) {
   const sunElement = document.createElement("div");
   sunElement.classList.add("sun");
 
-  
+  const sunriseTimeInSeconds = convertDurationtoSeconds(timeData.sunriseTime);
+  const sunsetTimeInSeconds = convertDurationtoSeconds(timeData.sunsetTime, true);
+  const currentTimeInSeconds = timeData.sunriseTime > timeData.currentTime ? convertDurationtoSeconds(timeData.currentTime, true) : convertDurationtoSeconds(timeData.currentTime);
 
-  const sunTimeline = gsap.timeline();
+  const secondsSinceSunrise = Math.max(currentTimeInSeconds, sunriseTimeInSeconds) - Math.min(currentTimeInSeconds, sunriseTimeInSeconds);
+  const secondsOfSunshine = Math.max(sunsetTimeInSeconds, sunriseTimeInSeconds) - Math.min(sunsetTimeInSeconds, sunriseTimeInSeconds);
+  const timeUntilSunsetInSeconds = Math.max(currentTimeInSeconds, sunsetTimeInSeconds) - Math.min(currentTimeInSeconds, sunsetTimeInSeconds);
+  const currentSunPosition = secondsSinceSunrise / secondsOfSunshine;
 
-  const sunriseTimeInDecimals =
-    timeData.sunriseTime.slice(0, 2) + "." + timeData.sunriseTime.slice(3);
-  let sunsetTimeInDecimals =
-    timeData.sunsetTime.slice(0, 2) + "." + timeData.sunsetTime.slice(3);
-
-  // Accounts for the times where the location sunset is past 24:00
-  if (sunsetTimeInDecimals.charAt(0) === "0") {
-    sunsetTimeInDecimals = Number(sunsetTimeInDecimals) + 24;
+  if (currentSunPosition >= 1) {
+    createMoon(timeData);
+    return;
   }
-
-  const currentTimeInDecimals = timeData.currentTime;
-  const hoursOfSunshine = sunsetTimeInDecimals - sunriseTimeInDecimals;
-  const hoursSinceSunrise = currentTimeInDecimals - sunriseTimeInDecimals;
-  const timeUntilSunsetInSeconds = (sunsetTimeInDecimals - currentTimeInDecimals) * 3600;
-  const currentSunPosition = hoursSinceSunrise / hoursOfSunshine;
+  const sunTimeline = gsap.timeline();
 
   const windowWidth = window.innerWidth;
   const windowHeight = window.innerHeight;
+  const sunElementWidth = sunElement.offsetWidth;
+  const sunElementHeight = sunElement.offsetHeight;
 
   sunTimeline.set(sunElement, {
-    x: 0 - sunElement.offsetWidth / 2,
-    y: windowHeight + sunElement.offsetHeight,
+    x: 0 - sunElementWidth / 2,
+    y: windowHeight + sunElementHeight,
     opacity: 0
   });
-  
-
-
-
 
   const path = [
     {
-      x: 0 - sunElement.offsetWidth / 2,
-      y: windowHeight + sunElement.offsetHeight
+      x: 0 - sunElementWidth / 2,
+      y: windowHeight + sunElementHeight
     },
     { x: windowWidth - windowWidth / 1.25, y: windowHeight / 3 },
-    { x: windowWidth / 2 - sunElement.offsetWidth, y: windowHeight / 10 },
-    { x: windowWidth / 1.25 - sunElement.offsetWidth, y: windowHeight / 3 },
+    { x: windowWidth / 2 - sunElementWidth, y: windowHeight / 10 },
+    { x: windowWidth / 1.25 - sunElementWidth, y: windowHeight / 3 },
     {
-      x: windowWidth - sunElement.offsetWidth / 2,
-      y: windowHeight + sunElement.offsetHeight,
+      x: windowWidth - sunElementWidth / 2,
+      y: windowHeight + sunElementHeight,
     },
   ];
 
@@ -68,22 +63,24 @@ export function moveSun(timeData) {
     motionPath: motionPath,
     duration: timeUntilSunsetInSeconds,
     ease: "none",
+    onComplete: swapFromSunToMoon,
+    onCompleteParams: [sunElement, timeData]
   }, 0);
-  
-  
+
+
   sunTimeline.progress(currentSunPosition);
 
   // Separate timeline due to progress being set above
   // in turn cancelling the opacity animation
   gsap.to(sunElement, {
-    duration: 4,
+    duration: 1,
     opacity: 1
   })
 
 
   animatedBackgroundElement.appendChild(sunElement);
 
-  createRays();
+  createSunRays();
 
   const rays = document.querySelectorAll(".ray");
   function isEven(n) {
@@ -109,7 +106,7 @@ export function moveSun(timeData) {
   }
 }
 
-function createRays() {
+function createSunRays() {
   const sunElement = document.querySelector(".sun");
 
   const uvIndex = 2;
@@ -121,4 +118,139 @@ function createRays() {
 
     sunElement.appendChild(rayElement);
   }
+}
+
+
+function swapFromSunToMoon(sunElement, timeData) {
+  gsap.killTweensOf(sunElement);
+  sunElement.remove();
+
+  createMoon(timeData);
+}
+
+export function createMoon(timeData) {
+  const moonElement = document.createElement("div");
+  moonElement.classList.add("moon");
+
+  
+  const sunriseTimeInSeconds = convertDurationtoSeconds(timeData.sunriseTime);
+  const sunsetTimeInSeconds = convertDurationtoSeconds(timeData.sunsetTime, true);
+  const currentTimeInSeconds = convertDurationtoSeconds(timeData.currentTime, true);
+  
+  const secondsSinceSunset = Math.max(currentTimeInSeconds, sunsetTimeInSeconds) - Math.min(currentTimeInSeconds, sunsetTimeInSeconds);
+  const secondsOfMoonlight = Math.max(sunsetTimeInSeconds, sunriseTimeInSeconds) - Math.min(sunsetTimeInSeconds, sunriseTimeInSeconds);
+  const timeUntilSunriseInSeconds = Math.max(currentTimeInSeconds, sunriseTimeInSeconds) - Math.min(currentTimeInSeconds, sunriseTimeInSeconds);
+  const currentMoonPosition = secondsSinceSunset / secondsOfMoonlight;
+
+  if (currentMoonPosition >= 1) {
+    createMoon(timeData);
+    return;
+  }
+  
+  const moonTimeline = gsap.timeline();
+  
+  const windowWidth = window.innerWidth;
+  const windowHeight = window.innerHeight;
+  const moonElementWidth = moonElement.offsetWidth;
+  const moonElementHeight = moonElement.offsetHeight;
+  
+
+  moonTimeline.set(moonElement, {
+    x: 0 - moonElementWidth / 2,
+    y: windowHeight + moonElementHeight,
+    opacity: 0
+  });
+
+  const path = [
+    {
+      x: 0 - moonElementWidth / 2,
+      y: windowHeight + moonElementHeight
+    },
+    { x: windowWidth - windowWidth / 1.25, y: windowHeight / 3 },
+    { x: windowWidth / 2 - moonElementWidth, y: windowHeight / 10 },
+    { x: windowWidth / 1.25 - moonElementWidth, y: windowHeight / 3 },
+    {
+      x: windowWidth - moonElementWidth / 2,
+      y: windowHeight + moonElementHeight,
+    },
+  ];
+
+  const motionPath = {
+    path: path,
+    curviness: 1.5,
+  };
+
+  let rawPath = MotionPathPlugin.getRawPath(path),
+    point;
+
+  MotionPathPlugin.cacheRawPathMeasurements(rawPath);
+
+  point = MotionPathPlugin.getPositionOnPath(rawPath, 0.5, true);
+
+  moonTimeline.to(moonElement, {
+    motionPath: motionPath,
+    duration: timeUntilSunriseInSeconds,
+    ease: "none",
+    onComplete: swapFromMoonToSun,
+    onCompleteParams: [moonElement, timeData]
+  }, 0);
+
+
+  moonTimeline.progress(currentMoonPosition);
+
+  // Separate timeline due to progress being set above
+  // in turn cancelling the opacity animation
+  gsap.to(moonElement, {
+    duration: 1,
+    opacity: 1
+  })
+
+
+  animatedBackgroundElement.appendChild(moonElement);
+
+  createMoonRays();
+
+  const rays = document.querySelectorAll(".ray");
+  function isEven(n) {
+    return n % 2 == 0;
+  }
+
+  for (var i = 0; i < rays.length; i++) {
+    const thisRand = Math.floor(Math.random() * 100) + 10;
+    let thisRotation = 360;
+
+    if (isEven(i)) {
+      thisRotation = -360;
+    }
+
+    const tl = gsap.timeline({ repeat: -1 });
+    tl.from(rays[i], 0, {
+      rotation: 0,
+      scale: 1,
+    }).to(rays[i], thisRand, {
+      rotation: thisRotation,
+      scale: 2,
+    });
+  }
+}
+
+function createMoonRays() {
+  const moonElement = document.querySelector(".moon");
+
+  const uvIndex = 2;
+
+  for (let i = 0; i < uvIndex * 5; i++) {
+    const rayElement = document.createElement("div");
+
+    rayElement.classList.add("ray");
+
+    moonElement.appendChild(rayElement);
+  }
+}
+
+function swapFromMoonToSun(moonElement, timeData) {
+  gsap.killTweensOf(moonElement);
+  moonElement.remove();
+
+  createSun(timeData);
 }

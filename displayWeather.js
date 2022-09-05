@@ -1,9 +1,11 @@
 import { global } from "./index.js";
 import { createClouds } from "./createClouds.js";
-import { getHoursAndMinutesFromUnix, removeAllElementChildren } from "./utils.js";
-import { moveSun } from "./createSun.js";
+import { convertUnixSecondsToHoursAndMinutes, removeAllElementChildren } from "./utils.js";
+import { createSun } from "./createSun.js";
 
-const cloudElementContainer = document.querySelector(".clouds");
+const animatedBackgroundElement = document.querySelector(
+  ".animated-background"
+);
 const locationInputElement = document.querySelector(".location-input");
 const locationHeaderElement = document.querySelector(".weather-location");
 const weatherDataElement = document.querySelector(".weather-data-container");
@@ -83,23 +85,28 @@ function displayWeatherAnimation(data) {
   }, 100);
  */
 
+
   const timeData = {
-    sunriseTime: getHoursAndMinutesFromUnix(data.current.sunrise),
-    sunsetTime: getHoursAndMinutesFromUnix(data.current.sunset),
-    currentTime: new Date().getUTCHours() + data.timezone_offset / 3600 + "." + new Date().getUTCMinutes()
+    sunriseTime: convertUnixSecondsToHoursAndMinutes(data.current.sunrise + data.timezone_offset),
+    sunsetTime: convertUnixSecondsToHoursAndMinutes(data.current.sunset + data.timezone_offset),
+    currentTime: convertUnixSecondsToHoursAndMinutes((new Date().getTime() / 1000) + data.timezone_offset)
   }
 
-  moveSun(timeData);
+
 
   // Kill all tweens before removing the DOM elements
   killAllTweens();
 
   // Clear all remaining SVG's and set counts back to 0
-  removeAllElementChildren(cloudElementContainer);
+  removeAllElementChildren(animatedBackgroundElement);
   resetAllSVGCounts();
+
+  createSun(timeData);
 
   // Create new location's SVG shapes
   createSVGShapes(svgData);
+
+
 }
 
 function resetAllSVGCounts() {
@@ -117,7 +124,11 @@ function createSVGShapes(svgData) {
 }
 
 function killAllTweens() {
-  for (let i = 0; i < cloudElementContainer.children.length; i++) {
-    gsap.killTweensOf(cloudElementContainer.children[i]);
+  const cloudElementContainer = document.querySelector(".clouds");
+
+  if (cloudElementContainer) {
+    for (let i = 0; i < cloudElementContainer.children.length; i++) {
+      gsap.killTweensOf(cloudElementContainer.children[i]);
+    }
   }
 }

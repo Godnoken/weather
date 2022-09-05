@@ -6,13 +6,18 @@ import { createRainfield } from "./createRain.js";
 const animatedBackgroundElement = document.querySelector(
   ".animated-background"
 );
-const cloudElementContainer = document.querySelector(".clouds");
+
 
 export function createClouds(
   amountOfClouds,
   amountOfRainfields,
   amountOfRaindrops
 ) {
+
+  const cloudElementContainer = document.createElement("div");
+  cloudElementContainer.classList.add("clouds");
+  animatedBackgroundElement.appendChild(cloudElementContainer);
+
   // Creates clouds based on percentage of the sky that is filled with clouds, divided by a number
   // as to not impact performance too much
   for (let i = global.amountOfCloudsOnScreen; i < amountOfClouds / 10; i++) {
@@ -21,6 +26,8 @@ export function createClouds(
 }
 
 function createCloud(amountOfRainfields, amountOfRaindrops) {
+  const cloudElementContainer = document.querySelector(".clouds");
+
   const cloudSVG = document.createElementNS("http://www.w3.org/2000/svg", "svg");
 
   // SVG HAS to be absolute otherwise the animation jumps on DOM deletion
@@ -88,7 +95,6 @@ function createCloud(amountOfRainfields, amountOfRaindrops) {
     cloudSVG.appendChild(extraCloud);
   }
 
-  animatedBackgroundElement.appendChild(cloudElementContainer);
   cloudElementContainer.appendChild(cloudSVG);
   cloudSVG.appendChild(baseCloud);
 
