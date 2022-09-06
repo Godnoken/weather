@@ -1,4 +1,4 @@
-import { convertDurationtoSeconds } from "./utils.js";
+import { convertDurationtoSeconds, random } from "./utils.js";
 
 //const sunElement = document.querySelector(".sun");
 const animatedBackgroundElement = document.querySelector(".animated-background")
@@ -27,7 +27,6 @@ export function createSun(timeData) {
   const windowWidth = window.innerWidth;
   const windowHeight = window.innerHeight;
   const sunElementWidth = sunElement.offsetWidth;
-  const sunElementHeight = sunElement.offsetHeight;
 
   sunTimeline.set(sunElement, {
     x: 0 - sunElementWidth / 2,
@@ -79,42 +78,31 @@ export function createSun(timeData) {
     opacity: 1
   })
 
-
   createSunRays();
-
-  const rays = document.querySelectorAll(".ray");
-  function isEven(n) {
-    return n % 2 == 0;
-  }
-
-  for (var i = 0; i < rays.length; i++) {
-    const thisRand = Math.floor(Math.random() * 100) + 10;
-    let thisRotation = 360;
-
-    if (isEven(i)) {
-      thisRotation = -360;
-    }
-
-    const tl = gsap.timeline({ repeat: -1 });
-    tl.from(rays[i], 0, {
-      rotation: 0,
-      scale: 1,
-    }).to(rays[i], thisRand, {
-      rotation: thisRotation,
-      scale: 2,
-    });
-  }
 }
 
 function createSunRays() {
   const sunElement = document.querySelector(".sun");
 
-  const uvIndex = 2;
+  let rotationDegree = 10;
+  let stronger = 1;
 
-  for (let i = 0; i < uvIndex * 5; i++) {
+  for (let i = 0; i < 36; i++) {
     const rayElement = document.createElement("div");
+    rayElement.classList.add("sun-ray");
 
-    rayElement.classList.add("ray");
+    rayElement.style.transform = `rotate(${rotationDegree}deg)`;
+    rayElement.style.opacity = random(0.02, 0.07);
+
+    if (stronger === 3) {
+      stronger = 0;
+      rayElement.style.opacity = random(0.10, 0.16);
+      rayElement.style.width = `${random(1, 8)}px`;
+      rayElement.style.setProperty("--gradientOpacity", random(0.1, 0.4));
+    }
+
+    rotationDegree += 10;
+    stronger += Math.round(random(0, 1));
 
     sunElement.appendChild(rayElement);
   }
@@ -131,6 +119,8 @@ function swapFromSunToMoon(sunElement, timeData) {
 export function createMoon(timeData) {
   const moonElement = document.createElement("div");
   moonElement.classList.add("moon");
+
+  animatedBackgroundElement.style.backgroundColor = "black";
 
   
   const sunriseTimeInSeconds = convertDurationtoSeconds(timeData.sunriseTime, true);
@@ -152,7 +142,6 @@ export function createMoon(timeData) {
   const windowWidth = window.innerWidth;
   const windowHeight = window.innerHeight;
   const moonElementWidth = moonElement.offsetWidth;
-  const moonElementHeight = moonElement.offsetHeight;
   
   moonTimeline.set(moonElement, {
     x: 0 - moonElementWidth / 2,
