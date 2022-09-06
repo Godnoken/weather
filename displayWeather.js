@@ -131,4 +131,15 @@ function killAllTweens() {
       gsap.killTweensOf(cloudElementContainer.children[i]);
     }
   }
+
+  const sunElement = document.querySelector(".sun");
+  const moonElement = document.querySelector(".moon");
+
+  if (sunElement) {
+    gsap.killTweensOf(sunElement);
+  }
+  else if (moonElement) {
+    gsap.killTweensOf(moonElement);
+  }
+
 }
