@@ -5,7 +5,6 @@ import {
   removeAllElementChildren,
 } from "./utils.js";
 import { createSun } from "./createSun.js";
-import { createMoon } from "./createMoon.js";
 
 const animatedBackgroundElement = document.querySelector(
   ".animated-background"
@@ -27,24 +26,7 @@ const weatherPrecipitationElement = document.querySelector(
 const weatherHumidityElement = document.querySelector(".weather-humidity");
 const weatherErrorElement = document.querySelector(".weather-error");
 
-export function displayWeatherData(data) {
-  locationHeaderElement.textContent = locationInputElement.value.toUpperCase();
-  weatherDescriptionElement.textContent =
-    data.current.weather[0].description.toUpperCase();
-  weatherActualTemperatureElement.textContent = data.current.temp;
-  weatherFeelsLikeElement.innerText = data.current.feels_like;
-  weatherWindSpeedElement.textContent = data.current.wind_speed + " m/s";
-  weatherHumidityElement.textContent = data.current.humidity + " %";
-  weatherPrecipitationElement.textContent =
-    Math.floor(data.hourly[0].pop * 100) + " %";
-
-  weatherDataElement.style.opacity = 1;
-  weatherErrorElement.style.opacity = 0;
-
-  displayWeatherAnimation(data);
-}
-
-function displayWeatherAnimation(data) {
+export function displayWeather(data) {
   const cloudData = {
     amountOfClouds: data.current.clouds,
     amountOfRainfields: data.hourly[0].pop * 10,
@@ -112,6 +94,9 @@ function displayWeatherAnimation(data) {
       onComplete: initiateNewLocation,
       onCompleteParams: [timeData, cloudData],
     });
+
+    fadeWeatherData(2, data);
+
     gsap.to(animatedBackgroundElement, {
       delay: 2,
       duration: 2,
@@ -124,7 +109,35 @@ function displayWeatherAnimation(data) {
       cloudData.amountOfRainfields,
       cloudData.amountOfRaindrops
     );
+    fadeWeatherData(0, data);
   }
+}
+
+function displayWeatherData(data) {
+  locationHeaderElement.textContent = locationInputElement.value.toUpperCase();
+  weatherDescriptionElement.textContent =
+    data.current.weather[0].description.toUpperCase();
+  weatherActualTemperatureElement.textContent = data.current.temp;
+  weatherFeelsLikeElement.innerText = data.current.feels_like;
+  weatherWindSpeedElement.textContent = data.current.wind_speed + " m/s";
+  weatherHumidityElement.textContent = data.current.humidity + " %";
+  weatherPrecipitationElement.textContent =
+    Math.floor(data.hourly[0].pop * 100) + " %";
+}
+
+function fadeWeatherData(duration, data) {
+  gsap.to(weatherDataElement, {
+    duration: duration,
+    opacity: 0,
+    onComplete: displayWeatherData,
+    onCompleteParams: [data]
+  });
+
+  gsap.to(weatherDataElement, {
+    delay: duration,
+    duration: 2,
+    opacity: 1,
+  });
 }
 
 function initiateNewLocation(timeData, cloudData) {

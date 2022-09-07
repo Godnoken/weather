@@ -1,4 +1,4 @@
-import { displayWeatherData } from "./displayWeather.js";
+import { displayWeather } from "./displayWeather.js";
 
 const weatherErrorElement = document.querySelector(".weather-error");
 const weatherDataElement = document.querySelector(".weather-data-container");
@@ -50,5 +50,5 @@ export async function changeLocation(event) {
   );
 
   console.log(weatherData);
-  displayWeatherData(weatherData);
+  displayWeather(weatherData);
 }
