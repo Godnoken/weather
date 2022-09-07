@@ -45,6 +45,8 @@ export function displayWeather(data) {
     ),
   };
 
+  console.log(data.current.weather[0].description)
+
   /*
       switch (data.current.weather[0].main) {
           case "Clouds":
@@ -73,7 +75,7 @@ export function displayWeather(data) {
 
   // Debugging
 
-  /*
+  
   setInterval(() => {
     console.log(
       global.amountOfRaindropsOnScreen,
@@ -81,7 +83,7 @@ export function displayWeather(data) {
       global.amountOfCloudsOnScreen
     );
   }, 100);
- */
+ 
 
   const moonElement = document.querySelector(".moon");
   const sunElement = document.querySelector(".sun");

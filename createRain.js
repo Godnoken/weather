@@ -15,23 +15,22 @@ export function createRainfield(cloud, amountOfRaindrops) {
   cloud.appendChild(rainfieldSVG);
 
   let amountOfRaindropsInCloud = 0;
+  global.amountOfRainOnScreen++;
 
   const sleep = ms => new Promise(res => setTimeout(res, ms));
 
   (async () => {
+    
     for (let i = 0; i < Math.min(amountOfRaindrops / 2, 5); i++) {
-      if (amountOfRaindrops / 2 > global.amountOfRaindropsOnScreen) {
+      if (amountOfRaindrops / 2 > global.amountOfRaindropsOnScreen && global.amountOfRainOnScreen > 0) {
         createRaindrop(rainfieldSVG);
         global.amountOfRaindropsOnScreen++;
         amountOfRaindropsInCloud++;
         cloud.dataset.raindrops = amountOfRaindropsInCloud;
-
         await sleep(2000);
       }
     }
   })();
-
-  global.amountOfRainOnScreen++;
 
   return rainfieldSVG;
 }
