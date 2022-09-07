@@ -1,7 +1,11 @@
 import { global } from "./index.js";
 import { createClouds } from "./createClouds.js";
-import { convertUnixSecondsToHoursAndMinutes, removeAllElementChildren } from "./utils.js";
+import {
+  convertUnixSecondsToHoursAndMinutes,
+  removeAllElementChildren,
+} from "./utils.js";
 import { createSun } from "./createSun.js";
+import { createMoon } from "./createMoon.js";
 
 const animatedBackgroundElement = document.querySelector(
   ".animated-background"
@@ -41,10 +45,22 @@ export function displayWeatherData(data) {
 }
 
 function displayWeatherAnimation(data) {
-  const svgData = {
+  const cloudData = {
     amountOfClouds: data.current.clouds,
     amountOfRainfields: data.hourly[0].pop * 10,
     amountOfRaindrops: data.hourly[0].pop * 100,
+  };
+
+  const timeData = {
+    sunriseTime: convertUnixSecondsToHoursAndMinutes(
+      data.current.sunrise + data.timezone_offset
+    ),
+    sunsetTime: convertUnixSecondsToHoursAndMinutes(
+      data.current.sunset + data.timezone_offset
+    ),
+    currentTime: convertUnixSecondsToHoursAndMinutes(
+      new Date().getTime() / 1000 + data.timezone_offset
+    ),
   };
 
   /*
@@ -85,15 +101,33 @@ function displayWeatherAnimation(data) {
   }, 100);
  */
 
+  const moonElement = document.querySelector(".moon");
+  const sunElement = document.querySelector(".sun");
 
-  const timeData = {
-    sunriseTime: convertUnixSecondsToHoursAndMinutes(data.current.sunrise + data.timezone_offset),
-    sunsetTime: convertUnixSecondsToHoursAndMinutes(data.current.sunset + data.timezone_offset),
-    currentTime: convertUnixSecondsToHoursAndMinutes((new Date().getTime() / 1000) + data.timezone_offset)
+  // Checks if moon or sun already exists so we can do a smooth transition
+  if (moonElement || sunElement) {
+    gsap.to(animatedBackgroundElement, {
+      duration: 2,
+      opacity: 0,
+      onComplete: initiateNewLocation,
+      onCompleteParams: [timeData, cloudData],
+    });
+    gsap.to(animatedBackgroundElement, {
+      delay: 2,
+      duration: 2,
+      opacity: 1,
+    });
+  } else {
+    createSun(timeData);
+    createClouds(
+      cloudData.amountOfClouds,
+      cloudData.amountOfRainfields,
+      cloudData.amountOfRaindrops
+    );
   }
+}
 
-
-
+function initiateNewLocation(timeData, cloudData) {
   // Kill all tweens before removing the DOM elements
   killAllTweens();
 
@@ -102,25 +136,17 @@ function displayWeatherAnimation(data) {
   resetAllSVGCounts();
 
   createSun(timeData);
-
-  // Create new location's SVG shapes
-  createSVGShapes(svgData);
-
-
+  createClouds(
+    cloudData.amountOfClouds,
+    cloudData.amountOfRainfields,
+    cloudData.amountOfRaindrops
+  );
 }
 
 function resetAllSVGCounts() {
   global.amountOfCloudsOnScreen = 0;
   global.amountOfRainOnScreen = 0;
   global.amountOfRaindropsOnScreen = 0;
-}
-
-function createSVGShapes(svgData) {
-  createClouds(
-    svgData.amountOfClouds,
-    svgData.amountOfRainfields,
-    svgData.amountOfRaindrops
-  );
 }
 
 function killAllTweens() {
@@ -137,9 +163,7 @@ function killAllTweens() {
 
   if (sunElement) {
     gsap.killTweensOf(sunElement);
-  }
-  else if (moonElement) {
+  } else if (moonElement) {
     gsap.killTweensOf(moonElement);
   }
-
 }

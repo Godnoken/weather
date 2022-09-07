@@ -4,6 +4,7 @@ import { createSun } from "./createSun.js";
 const animatedBackgroundElement = document.querySelector(
   ".animated-background"
 );
+const backgroundElement = document.querySelector(".background");
 
 let scheduledAnimationFrame;
 
@@ -81,7 +82,7 @@ export function createMoon(timeData) {
     moonElement,
     {
       motionPath: motionPath,
-      duration: 10,
+      duration: secondsOfMoonlight,
       ease: "none",
       onUpdate: throttle,
       onUpdateParams: [moonTimeline],
@@ -91,14 +92,17 @@ export function createMoon(timeData) {
     0
   );
 
-  moonTimeline.progress(0);
+  moonTimeline.progress(currentMoonPosition);
 
   // Separate timeline due to progress being set above
   // in turn cancelling the opacity animation
   gsap.to(moonElement, {
+    delay: 2,
     duration: 4,
     opacity: 1,
   });
+
+  checkProgress(moonTimeline);
 }
 
 function throttle(timeline) {
@@ -108,13 +112,17 @@ function throttle(timeline) {
 
   scheduledAnimationFrame = true;
 
-  setTimeout(() => checkProgress(timeline), 300);
+  setTimeout(() => checkProgress(timeline), 20000);
 }
 
 function checkProgress(timeline) {
   scheduledAnimationFrame = false;
 
   const progress = timeline.progress();
+
+  // Prevents the throttle to trigger opacity switch when it shouldn't because of setTimeout
+  // if changing between locations fast
+  if (progress === 0) return;
 
   if (progress < 0.5) {
     changeBackgroundColor(progress + 0.5);
@@ -124,7 +132,7 @@ function checkProgress(timeline) {
 }
 
 function changeBackgroundColor(progress) {
-  animatedBackgroundElement.style.setProperty("--colorOpacity", progress);
+  backgroundElement.style.setProperty("--opacity", progress);
 }
 
 function swapFromMoonToSun(moonElement, timeData) {

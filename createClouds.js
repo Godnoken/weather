@@ -54,10 +54,12 @@ function createCloud(amountOfRainfields, amountOfRaindrops) {
     width: width,
     height: height,
     opacity: 0,
+    zIndex: 1
   });
 
   // Makes new svg fully visible after 8 seconds
   timeline.to(cloudSVG, {
+    delay: 2,
     duration: 8,
     opacity: 1,
   });
