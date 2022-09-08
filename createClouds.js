@@ -44,9 +44,11 @@ function createCloud(cloudData) {
   const height = 200;
   const x = random(width / 1.5, window.innerWidth);
   const y = random(height, window.innerHeight);
-  const moveToX = -window.innerWidth + random(0, window.innerWidth) * 2;
-  const moveToY = -window.innerHeight + random(0, window.innerHeight) * 2;
-  const duration = random(200, 1000);
+  const moveToX = window.innerWidth + x;
+  const moveToY = random(25, 100);
+
+  // Speed determined by how high up the cloud is in the atmosphere
+  const duration = y * 1.5 + 200;
   const delay = random(8, 120);
 
   // Initializes position, size, color etc
