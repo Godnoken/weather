@@ -115,6 +115,7 @@ export function displayWeather(data) {
 
 function displayWeatherData(data) {
   locationHeaderElement.textContent = locationInputElement.value.toUpperCase();
+  weatherErrorElement.style.opacity = 0;
   weatherDescriptionElement.textContent =
     data.current.weather[0].description.toUpperCase();
   weatherActualTemperatureElement.textContent = data.current.temp;
