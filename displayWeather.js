@@ -31,6 +31,8 @@ export function displayWeather(data) {
     amountOfClouds: data.current.clouds,
     amountOfRainfields: data.hourly[0].pop * 10,
     amountOfRaindrops: data.hourly[0].pop * 100,
+    amountOfSnowfields: data.hourly[0].snow ? data.hourly[0].snow["1h"] * 10 : null,
+    amountOfSnowflakes: data.hourly[0].snow ? data.hourly[0].snow["1h"] * 100 : null,
   };
 
   const timeData = {
@@ -75,7 +77,7 @@ export function displayWeather(data) {
 
   // Debugging
 
-  
+  /*
   setInterval(() => {
     console.log(
       global.amountOfRaindropsOnScreen,
@@ -83,7 +85,7 @@ export function displayWeather(data) {
       global.amountOfCloudsOnScreen
     );
   }, 100);
- 
+ */
 
   const moonElement = document.querySelector(".moon");
   const sunElement = document.querySelector(".sun");
@@ -106,11 +108,7 @@ export function displayWeather(data) {
     });
   } else {
     createSun(timeData);
-    createClouds(
-      cloudData.amountOfClouds,
-      cloudData.amountOfRainfields,
-      cloudData.amountOfRaindrops
-    );
+    createClouds(cloudData);
     fadeWeatherData(0, data);
   }
 }
@@ -123,8 +121,17 @@ function displayWeatherData(data) {
   weatherFeelsLikeElement.innerText = data.current.feels_like;
   weatherWindSpeedElement.textContent = data.current.wind_speed + " m/s";
   weatherHumidityElement.textContent = data.current.humidity + " %";
-  weatherPrecipitationElement.textContent =
+
+  if (data.hourly[0].snow) {
+    weatherPrecipitationElement.previousElementSibling.textContent = "Snow";
+    weatherPrecipitationElement.textContent =
+    data.hourly[0].snow["1h"] + " mm";
+  }
+  else {
+    weatherPrecipitationElement.previousElementSibling.textContent = "Precipitation";
+    weatherPrecipitationElement.textContent =
     Math.floor(data.hourly[0].pop * 100) + " %";
+  }
 }
 
 function fadeWeatherData(duration, data) {
@@ -151,17 +158,15 @@ function initiateNewLocation(timeData, cloudData) {
   resetAllSVGCounts();
 
   createSun(timeData);
-  createClouds(
-    cloudData.amountOfClouds,
-    cloudData.amountOfRainfields,
-    cloudData.amountOfRaindrops
-  );
+  createClouds(cloudData);
 }
 
 function resetAllSVGCounts() {
   global.amountOfCloudsOnScreen = 0;
   global.amountOfRainOnScreen = 0;
   global.amountOfRaindropsOnScreen = 0;
+  global.amountOfSnowfieldsOnScreen = 0;
+  global.amountOfSnowflakesOnScreen = 0;
 }
 
 function killAllTweens() {

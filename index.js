@@ -8,5 +8,7 @@ locationInputElement.addEventListener("change", changeLocation);
 export let global = {
     amountOfCloudsOnScreen: 0,
     amountOfRainOnScreen: 0,
-    amountOfRaindropsOnScreen: 0
+    amountOfRaindropsOnScreen: 0,
+    amountOfSnowfieldsOnScreen: 0,
+    amountOfSnowflakesOnScreen: 0,
 }

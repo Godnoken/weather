@@ -2,33 +2,35 @@ import { global } from "./index.js";
 import { random } from "./utils.js";
 import { createEllipse, createRect } from "./createSvgShapes.js";
 import { createRainfield } from "./createRain.js";
+import { createSnowfield } from "./createSnow.js";
 
 const animatedBackgroundElement = document.querySelector(
   ".animated-background"
 );
 
-
-export function createClouds(
-  amountOfClouds,
-  amountOfRainfields,
-  amountOfRaindrops
-) {
-
+export function createClouds(cloudData) {
   const cloudElementContainer = document.createElement("div");
   cloudElementContainer.classList.add("clouds");
   animatedBackgroundElement.appendChild(cloudElementContainer);
 
   // Creates clouds based on percentage of the sky that is filled with clouds, divided by a number
   // as to not impact performance too much
-  for (let i = global.amountOfCloudsOnScreen; i < amountOfClouds / 10; i++) {
-    createCloud(amountOfRainfields, amountOfRaindrops);
+  for (
+    let i = global.amountOfCloudsOnScreen;
+    i < cloudData.amountOfClouds / 10;
+    i++
+  ) {
+    createCloud(cloudData);
   }
 }
 
-function createCloud(amountOfRainfields, amountOfRaindrops) {
+function createCloud(cloudData) {
   const cloudElementContainer = document.querySelector(".clouds");
 
-  const cloudSVG = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  const cloudSVG = document.createElementNS(
+    "http://www.w3.org/2000/svg",
+    "svg"
+  );
 
   // SVG HAS to be absolute otherwise the animation jumps on DOM deletion
   cloudSVG.style.position = "absolute";
@@ -54,7 +56,7 @@ function createCloud(amountOfRainfields, amountOfRaindrops) {
     width: width,
     height: height,
     opacity: 0,
-    zIndex: 1
+    zIndex: 1,
   });
 
   // Makes new svg fully visible after 8 seconds
@@ -88,7 +90,7 @@ function createCloud(amountOfRainfields, amountOfRaindrops) {
     },
     0
   );
-  
+
   const baseCloud = createBaseCloud(width, height);
 
   for (let j = 0; j < 6; j++) {
@@ -103,12 +105,22 @@ function createCloud(amountOfRainfields, amountOfRaindrops) {
   global.amountOfCloudsOnScreen++;
 
   setTimeout(() => {
-    if (
-      amountOfRainfields > global.amountOfRainOnScreen ||
-      (amountOfRainfields > 0 && global.amountOfRainOnScreen === 0)
-    ) {
-      createRainfield(cloudSVG, amountOfRaindrops);
-      cloudSVG.dataset.rainfield = true;
+    if (cloudData.amountOfSnowfields) {
+      if (
+        cloudData.amountOfSnowfields > global.amountOfSnowfieldsOnScreen ||
+        (cloudData.amountOfSnowfields > 0 &&
+          global.amountOfSnowfieldsOnScreen === 0)
+      ) {
+        createSnowfield(cloudSVG, cloudData.amountOfSnowflakes);
+      }
+    } else {
+      if (
+        cloudData.amountOfRainfields > global.amountOfRainOnScreen ||
+        (cloudData.amountOfRainfields > 0 && global.amountOfRainOnScreen === 0)
+      ) {
+        createRainfield(cloudSVG, cloudData.amountOfRaindrops);
+        cloudSVG.dataset.rainfield = true;
+      }
     }
   }, 2000);
 
@@ -131,8 +143,8 @@ function createCloud(amountOfRainfields, amountOfRaindrops) {
     // I realise that this has something to do with the timeline
     // but I don't understand it enough to fix it properly
     setTimeout(() => {
-      createCloud(amountOfRainfields, amountOfRaindrops);
-    }, 100)
+      createCloud(cloudData);
+    }, 100);
   }
 }
 
@@ -145,7 +157,7 @@ function createBaseCloud(width, height) {
   const baseCloudRx = 40;
   const baseCloudWidth = random(160, 300);
   const baseCloudHeight = random(40, 80);
-  
+
   const baseCloudTimeline = gsap.timeline();
 
   // Initializes position, size, color etc
@@ -164,14 +176,14 @@ function createBaseCloud(width, height) {
 
 function createExtraCloud() {
   const extraCloud = createEllipse();
-  
+
   const randomGrayValue = random(150, 190);
   const extraCloudFill = `rgb(${randomGrayValue}, ${randomGrayValue}, ${randomGrayValue})`;
   const extraCloudRy = random(30, 60);
   const extraCloudRx = random(30, 60);
   const extraCloudX = 0 + random(125, 275);
   const extraCloudY = 180;
-  
+
   const extraCloudTimeline = gsap.timeline();
 
   extraCloudTimeline.set(extraCloud, {
