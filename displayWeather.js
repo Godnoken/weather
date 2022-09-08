@@ -28,7 +28,7 @@ const weatherErrorElement = document.querySelector(".weather-error");
 
 export function displayWeather(data) {
   const cloudData = {
-    amountOfClouds: data.current.clouds,
+    amountOfClouds: data.hourly[0].clouds,
     amountOfRainfields: data.hourly[0].pop * 10,
     amountOfRaindrops: data.hourly[0].pop * 100,
     amountOfSnowfields: data.hourly[0].snow ? data.hourly[0].snow["1h"] * 10 : null,
@@ -46,8 +46,6 @@ export function displayWeather(data) {
       new Date().getTime() / 1000 + data.timezone_offset
     ),
   };
-
-  console.log(data.current.weather[0].description)
 
   /*
       switch (data.current.weather[0].main) {
@@ -107,7 +105,7 @@ export function displayWeather(data) {
       opacity: 1,
     });
   } else {
-    createSun(timeData);
+    createSun(timeData, cloudData);
     createClouds(cloudData);
     fadeWeatherData(0, data);
   }
@@ -158,7 +156,7 @@ function initiateNewLocation(timeData, cloudData) {
   removeAllElementChildren(animatedBackgroundElement);
   resetAllSVGCounts();
 
-  createSun(timeData);
+  createSun(timeData, cloudData);
   createClouds(cloudData);
 }
 

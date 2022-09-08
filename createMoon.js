@@ -125,13 +125,13 @@ function checkProgress(timeline) {
   if (progress === 0) return;
 
   if (progress < 0.5) {
-    changeBackgroundColor(progress + 0.5);
+    changeBackgroundOpacity(progress + 0.5);
   } else if (progress < 1) {
-    changeBackgroundColor(1 + (1 + (progress + 0.5) * -1));
+    changeBackgroundOpacity(1 + (1 + (progress + 0.5) * -1));
   }
 }
 
-function changeBackgroundColor(progress) {
+function changeBackgroundOpacity(progress) {
   backgroundElement.style.setProperty("--opacity", progress);
 }
 

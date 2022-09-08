@@ -8,7 +8,7 @@ const backgroundElement = document.querySelector(".background");
 
 let scheduledAnimationFrame;
 
-export function createSun(timeData) {
+export function createSun(timeData, cloudData) {
   const sunElement = document.createElement("div");
   sunElement.classList.add("sun");
 
@@ -80,7 +80,7 @@ export function createSun(timeData) {
     duration: secondsOfSunshine,
     ease: "none",
     onUpdate: throttle,
-    onUpdateParams: [sunTimeline],
+    onUpdateParams: [sunTimeline, cloudData],
     onComplete: swapFromSunToMoon,
     onCompleteParams: [sunElement, timeData],
   });
@@ -92,24 +92,24 @@ export function createSun(timeData) {
   gsap.to(sunElement, {
     delay: 2,
     duration: 4,
-    opacity: 1,
+    opacity: 1.3 - cloudData.amountOfClouds / 100,
   });
 
   createSunRays();
-  checkProgress(sunTimeline);
+  checkProgress(sunTimeline, cloudData);
 }
 
-function throttle(timeline) {
+function throttle(timeline, cloudData) {
   if (scheduledAnimationFrame) {
     return;
   }
 
   scheduledAnimationFrame = true;
 
-  setTimeout(() => checkProgress(timeline), 20000);
+  setTimeout(() => checkProgress(timeline, cloudData), 20000);
 }
 
-function checkProgress(timeline) {
+function checkProgress(timeline, cloudData) {
   scheduledAnimationFrame = false;
 
   const progress = timeline.progress();
@@ -119,13 +119,17 @@ function checkProgress(timeline) {
   if (progress === 0) return;
 
   if (progress < 0.5) {
-    changeBackgroundColor(1 + (progress + 0.5) * -1);
+
+    // Calculates how bright the sky will be depending on amount of clouds and time of day
+    changeBackgroundOpacity(Math.min(0.5, (1.5 + cloudData.amountOfClouds / 100) - 1 + (progress + 0.5) * -1));
   } else if (progress < 1) {
-    changeBackgroundColor(progress - 0.5);
+
+    // Same as above but slightly different calculation due to the sky getting darker throughout the day
+    changeBackgroundOpacity(Math.min(0.5, (cloudData.amountOfClouds / 100) - 1 - (progress * -1)));
   }
 }
 
-function changeBackgroundColor(progress) {
+function changeBackgroundOpacity(progress) {
   backgroundElement.style.setProperty("--opacity", progress);
 }
 
