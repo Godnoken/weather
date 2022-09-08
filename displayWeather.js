@@ -114,7 +114,7 @@ export function displayWeather(data) {
 }
 
 function displayWeatherData(data) {
-  locationHeaderElement.textContent = locationInputElement.value.toUpperCase();
+  locationHeaderElement.textContent = locationInputElement.value.toUpperCase() + " / " + data.timezone.split("/")[0].toUpperCase();
   weatherErrorElement.style.opacity = 0;
   weatherDescriptionElement.textContent =
     data.current.weather[0].description.toUpperCase();
