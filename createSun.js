@@ -1,5 +1,6 @@
 import { convertDurationtoSeconds, random } from "./utils.js";
 import { createMoon } from "./createMoon.js";
+import { global } from "./index.js";
 
 const animatedBackgroundElement = document.querySelector(
   ".animated-background"
@@ -31,35 +32,35 @@ export function createSun(timeData, cloudData) {
   const currentSunPosition = secondsSinceSunrise / secondsOfSunshine;
 
   if (currentSunPosition >= 1) {
-    createMoon(timeData);
+    createMoon(timeData, cloudData);
     return;
   }
 
   animatedBackgroundElement.appendChild(sunElement);
   const sunTimeline = gsap.timeline();
 
-  const windowWidth = window.innerWidth;
-  const windowHeight = window.innerHeight;
-  const sunElementWidth = sunElement.offsetWidth;
-  const sunElementHeight = sunElement.offsetHeight;
+  const sunElementWidth = global.mobile ? 25 : 100;
+  const sunElementHeight = global.mobile ? 25 : 100;
 
   sunTimeline.set(sunElement, {
-    x: 0 - sunElementWidth / 2,
-    y: windowHeight + sunElementHeight,
+    x: 0,
+    y: global.backgroundHeight,
+    width: sunElementWidth,
+    height: sunElementHeight,
     opacity: 0,
   });
 
   const path = [
+    { x: 0, y: global.backgroundHeight },
+    { x: global.backgroundWidth / 4, y: global.backgroundHeight / 3 },
+    { x: global.backgroundWidth / 2, y: global.backgroundHeight / 10 },
     {
-      x: 0 - sunElementWidth / 2,
-      y: windowHeight + sunElementHeight,
+      x: global.backgroundWidth - global.backgroundWidth / 4 - sunElementWidth,
+      y: global.backgroundHeight / 3,
     },
-    { x: windowWidth - windowWidth / 1.25, y: windowHeight / 3 },
-    { x: windowWidth / 2 - sunElementWidth, y: windowHeight / 10 },
-    { x: windowWidth / 1.25 - sunElementWidth, y: windowHeight / 3 },
     {
-      x: windowWidth - sunElementWidth / 2,
-      y: windowHeight + sunElementHeight
+      x: global.backgroundWidth - sunElementWidth,
+      y: global.backgroundHeight,
     },
   ];
 
@@ -82,7 +83,7 @@ export function createSun(timeData, cloudData) {
     onUpdate: throttle,
     onUpdateParams: [sunTimeline, cloudData],
     onComplete: swapFromSunToMoon,
-    onCompleteParams: [sunElement, timeData],
+    onCompleteParams: [sunElement, timeData, cloudData],
   });
 
   sunTimeline.progress(currentSunPosition);
@@ -95,7 +96,7 @@ export function createSun(timeData, cloudData) {
     opacity: 1.3 - cloudData.amountOfClouds / 100,
   });
 
-  createSunRays();
+  createSunRays(sunElementWidth, sunElementHeight);
   checkProgress(sunTimeline, cloudData);
 }
 
@@ -133,7 +134,7 @@ function changeBackgroundOpacity(progress) {
   backgroundElement.style.setProperty("--opacity", progress);
 }
 
-function createSunRays() {
+function createSunRays(sunElementWidth, sunElementHeight) {
   const sunElement = document.querySelector(".sun");
 
   let rotationDegree = 10;
@@ -145,11 +146,13 @@ function createSunRays() {
 
     rayElement.style.transform = `rotate(${rotationDegree}deg)`;
     rayElement.style.opacity = random(0.02, 0.07);
+    rayElement.style.setProperty("--width", `${sunElementWidth / 3}px`);
+    rayElement.style.setProperty("--height", `${sunElementHeight * 3}px`);
 
     if (stronger === 3) {
       stronger = 0;
       rayElement.style.opacity = random(0.1, 0.16);
-      rayElement.style.width = `${random(1, 8)}px`;
+      rayElement.style.setProperty("--width", `${random(1, 8)}}px`);
       rayElement.style.setProperty("--gradientOpacity", random(0.1, 0.4));
     }
 
@@ -160,9 +163,9 @@ function createSunRays() {
   }
 }
 
-function swapFromSunToMoon(sunElement, timeData) {
+function swapFromSunToMoon(sunElement, timeData, cloudData) {
   gsap.killTweensOf(sunElement);
   sunElement.remove();
 
-  createMoon(timeData);
+  createMoon(timeData, cloudData);
 }

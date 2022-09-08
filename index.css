@@ -1,3 +1,7 @@
+* {
+    box-sizing: border-box;
+}
+
 html {
     overflow: hidden;
     font-family: 'Cairo', sans-serif;
@@ -35,31 +39,26 @@ html {
 .sun {
     position: absolute;
     background: white;
-    width: 100px;
-    height: 100px;
     border-radius: 50%;
     box-shadow: 0 0 20px rgb(255, 255, 228), 0 0 30px rgb(255, 255, 228), 0 0 40px rgb(255, 255, 228), 0 0 50px rgb(255, 255, 228), 0 0 60px rgb(255, 255, 228), 0 0 100px rgb(255, 255, 228), 0 0 300px 50px rgb(255, 255, 255), inset 0 0 25px rgb(255, 255, 228), inset 0 0 50px rgb(255, 255, 228);
 }
 
 .sun-ray {
     --gradientOpacity: 0.3;
-    height: 300px;
-    width: 30px;
-    background: -webkit-linear-gradient(bottom, rgba(255,255,255,1) 0%, rgba(255,255,255,var(--gradientOpacity)) 50%, transparent 100%);
     position: absolute;
-    top: calc(-100% + -50px);
-    left: 50%;
-    margin: calc(300px / 2 * -1) 0 0 calc(30px / 2 * -1);
+    height: var(--height);
+    width: var(--width);
+    background: -webkit-linear-gradient(bottom, rgba(255,255,255,1) 0%, rgba(255,255,255,var(--gradientOpacity)) 50%, transparent 100%);
+    top: calc(var(--height) * -1);
+    left: var(--width);
     border-radius: 0 0 100% 100%;
-    transform-origin: 50% calc(100% + 50px);
+    transform-origin: 50% calc(100% + var(--height) / 6);
     opacity: 0.05;
 }
 
 .moon {
     position: absolute;
     background: white;
-    width: 100px;
-    height: 100px;
     border-radius: 50%;
     box-shadow: 0 0 6px white, 0 0 300px 30px white;
     overflow: hidden;
@@ -69,10 +68,10 @@ html {
 .moon::after {
     content: "";
     position: absolute;
-    left: -12px;
-    top: -8px;
-    width: 125px;
-    height: 125px;
+    left: -10px;
+    top: -10px;
+    width: var(--moonSize);
+    height: var(--moonSize);
     background: transparent url("./fullMoon.webp");
     background-size: contain;
     opacity: 0.4;
@@ -179,9 +178,39 @@ html {
 
 .weather-temperature {
     display: flex;
+    justify-content: center;
     column-gap: 4px;
 }
 
 .weather-snippet-title {
     font-weight: bolder;
+}
+
+.weather-data-snippet {
+    text-align: center;
+}
+
+@media only screen and (max-width: 950px) {
+    .background {
+        height: 40%;
+    }
+
+    .weather-container {
+        top: calc(40% - 1px);
+        left: 0;
+        width: 100%;
+        height: 60%;
+        transform: translate(0px, 0px);
+        border: none;
+        border-radius: 0;
+        opacity: 1;
+    }
+
+    .weather-container:hover {
+        opacity: 1;
+    }
+
+    .weather-location {
+        font-size: 14px;
+    }
 }

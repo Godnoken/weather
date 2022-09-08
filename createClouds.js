@@ -40,11 +40,11 @@ function createCloud(cloudData) {
 
   const timeline = gsap.timeline();
 
-  const width = 400;
-  const height = 200;
-  const x = random(width / 1.5, window.innerWidth);
-  const y = random(height, window.innerHeight);
-  const moveToX = window.innerWidth + x;
+  const width = global.mobile ? 50 : 400;
+  const height = global.mobile ? 25 : 200;
+  const x = random(width / 1.5, global.backgroundWidth);
+  const y = random(height, global.backgroundHeight);
+  const moveToX = global.backgroundWidth + x;
   const moveToY = random(25, 100);
 
   // Speed determined by how high up the cloud is in the atmosphere
@@ -59,7 +59,7 @@ function createCloud(cloudData) {
     height: height,
     opacity: 0,
     zIndex: 1,
-    scale: random(1, 2)
+    scale: random(0.7, 1.2)
   });
 
   // Makes new svg fully visible after 8 seconds
@@ -96,8 +96,8 @@ function createCloud(cloudData) {
 
   const baseCloud = createBaseCloud(width, height);
 
-  for (let j = 0; j < 6; j++) {
-    const extraCloud = createExtraCloud();
+  for (let j = 0; j < 4; j++) {
+    const extraCloud = createExtraCloud(width, height);
 
     cloudSVG.appendChild(extraCloud);
   }
@@ -156,10 +156,10 @@ function createBaseCloud(width, height) {
 
   const randomGrayValue = random(150, 190);
   const baseCloudFill = `rgb(${randomGrayValue}, ${randomGrayValue}, ${randomGrayValue})`;
-  const baseCloudRy = 40;
-  const baseCloudRx = 40;
-  const baseCloudWidth = random(160, 300);
-  const baseCloudHeight = random(40, 80);
+  const baseCloudRx = width / 5;
+  const baseCloudRy = width / 5;
+  const baseCloudWidth = width;
+  const baseCloudHeight = random(height / 3, height - height / 3);
 
   const baseCloudTimeline = gsap.timeline();
 
@@ -177,21 +177,21 @@ function createBaseCloud(width, height) {
   return baseCloud;
 }
 
-function createExtraCloud() {
+function createExtraCloud(width, height) {
   const extraCloud = createEllipse();
 
   const randomGrayValue = random(150, 190);
   const extraCloudFill = `rgb(${randomGrayValue}, ${randomGrayValue}, ${randomGrayValue})`;
-  const extraCloudRy = random(30, 60);
-  const extraCloudRx = random(30, 60);
-  const extraCloudX = 0 + random(125, 275);
-  const extraCloudY = 180;
+  const extraCloudRx = random(width / 5, width / 4);
+  const extraCloudRy = random(width / 5, width / 4);
+  const extraCloudX = random((width - extraCloudRx / 2) / 4, width - (width + extraCloudRx / 2) / 4);
+  const extraCloudY = height - extraCloudRy * 1.5;
 
   const extraCloudTimeline = gsap.timeline();
 
   extraCloudTimeline.set(extraCloud, {
     cx: extraCloudX,
-    cy: extraCloudY - extraCloudRy,
+    cy: extraCloudY,
     rx: extraCloudRx,
     ry: extraCloudRy,
     fill: extraCloudFill,

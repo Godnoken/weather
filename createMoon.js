@@ -1,5 +1,6 @@
 import { convertDurationtoSeconds } from "./utils.js";
 import { createSun } from "./createSun.js";
+import { global } from "./index.js";
 
 const animatedBackgroundElement = document.querySelector(
   ".animated-background"
@@ -8,7 +9,7 @@ const backgroundElement = document.querySelector(".background");
 
 let scheduledAnimationFrame;
 
-export function createMoon(timeData) {
+export function createMoon(timeData, cloudData) {
   const moonElement = document.createElement("div");
   moonElement.classList.add("moon");
 
@@ -34,41 +35,46 @@ export function createMoon(timeData) {
   const currentMoonPosition = secondsSinceSunset / secondsOfMoonlight;
 
   if (currentMoonPosition >= 1) {
-    createMoon(timeData);
+    createMoon(timeData, cloudData);
     return;
   }
 
   animatedBackgroundElement.appendChild(moonElement);
   const moonTimeline = gsap.timeline();
 
-  const windowWidth = window.innerWidth;
-  const windowHeight = window.innerHeight;
-  const moonElementWidth = moonElement.offsetWidth;
-  const moonElementHeight = moonElement.offsetHeight;
+  const moonElementWidth = global.mobile ? 25 : 100;
+  const moonElementHeight = global.mobile ? 25 : 100;
 
   moonTimeline.set(moonElement, {
-    x: 0 - moonElementWidth / 2,
-    y: windowHeight + moonElementHeight,
+    x: 0,
+    y: global.backgroundHeight,
+    width: moonElementWidth,
+    height: moonElementHeight,
     opacity: 0,
   });
 
+  moonElement.style.setProperty("--moonSize", moonElementWidth + 20 + "px");
+
+  console.log(-moonElementWidth);
+
   const path = [
+    { x: 0, y: global.backgroundHeight },
+    { x: global.backgroundWidth / 4, y: global.backgroundHeight / 3 },
+    { x: global.backgroundWidth / 2, y: global.backgroundHeight / 10 },
     {
-      x: 0 - moonElementWidth / 2,
-      y: windowHeight + moonElementHeight,
+      x: global.backgroundWidth - global.backgroundWidth / 4 - moonElementWidth,
+      y: global.backgroundHeight / 3,
     },
-    { x: windowWidth - windowWidth / 1.25, y: windowHeight / 3 },
-    { x: windowWidth / 2 - moonElementWidth, y: windowHeight / 10 },
-    { x: windowWidth / 1.25 - moonElementWidth, y: windowHeight / 3 },
     {
-      x: windowWidth - moonElementWidth / 2,
-      y: windowHeight + moonElementHeight,
+      x: global.backgroundWidth - moonElementWidth,
+      y: global.backgroundHeight,
     },
   ];
 
   const motionPath = {
     path: path,
     curviness: 1.5,
+    alignOrigin: [0.5, 0.5],
   };
 
   let rawPath = MotionPathPlugin.getRawPath(path),
@@ -87,7 +93,7 @@ export function createMoon(timeData) {
       onUpdate: throttle,
       onUpdateParams: [moonTimeline],
       onComplete: swapFromMoonToSun,
-      onCompleteParams: [moonElement, timeData],
+      onCompleteParams: [moonElement, timeData, cloudData],
     },
     0
   );
@@ -135,9 +141,9 @@ function changeBackgroundOpacity(progress) {
   backgroundElement.style.setProperty("--opacity", progress);
 }
 
-function swapFromMoonToSun(moonElement, timeData) {
+function swapFromMoonToSun(moonElement, timeData, cloudData) {
   gsap.killTweensOf(moonElement);
   moonElement.remove();
 
-  createSun(timeData);
+  createSun(timeData, cloudData);
 }
