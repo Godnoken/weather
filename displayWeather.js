@@ -115,7 +115,7 @@ function displayWeatherData(data) {
   locationHeaderElement.textContent = locationInputElement.value.toUpperCase() + " / " + data.timezone.split("/")[0].toUpperCase();
   weatherErrorElement.style.opacity = 0;
   weatherDescriptionElement.textContent =
-    data.current.weather[0].description.toUpperCase();
+    data.hourly[0].weather[0].description.toUpperCase();
   weatherActualTemperatureElement.textContent = data.current.temp;
   weatherFeelsLikeElement.innerText = data.current.feels_like;
   weatherWindSpeedElement.textContent = data.current.wind_speed + " m/s";

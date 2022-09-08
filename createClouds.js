@@ -48,7 +48,7 @@ function createCloud(cloudData) {
   const moveToY = random(25, 100);
 
   // Speed determined by how high up the cloud is in the atmosphere
-  const duration = y * 1.5 + 200;
+  const duration = y * 1.5 + 100;
   const delay = random(8, 120);
 
   // Initializes position, size, color etc
@@ -59,6 +59,7 @@ function createCloud(cloudData) {
     height: height,
     opacity: 0,
     zIndex: 1,
+    scale: random(1, 2)
   });
 
   // Makes new svg fully visible after 8 seconds
