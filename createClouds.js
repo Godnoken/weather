@@ -59,7 +59,7 @@ function createCloud(cloudData) {
     height: height,
     opacity: 0,
     zIndex: 1,
-    scale: random(0.7, 1)
+    scale: random(0.7, 1),
   });
 
   // Makes new svg fully visible after 8 seconds
@@ -186,7 +186,10 @@ function createExtraCloud(width, height) {
   const extraCloudFill = `rgb(${randomGrayValue}, ${randomGrayValue}, ${randomGrayValue})`;
   const extraCloudRx = random(width / 5, width / 4);
   const extraCloudRy = random(width / 5, width / 4);
-  const extraCloudX = random((width - extraCloudRx / 2) / 4, width - (width + extraCloudRx / 2) / 4);
+  const extraCloudX = random(
+    (width - extraCloudRx / 2) / 4,
+    width - (width + extraCloudRx / 2) / 4
+  );
   const extraCloudY = height - extraCloudRy * 1.5;
 
   const extraCloudTimeline = gsap.timeline();

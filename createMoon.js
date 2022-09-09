@@ -55,8 +55,6 @@ export function createMoon(timeData, cloudData) {
 
   moonElement.style.setProperty("--moonSize", moonElementWidth + 20 + "px");
 
-  console.log(-moonElementWidth);
-
   const path = [
     { x: 0, y: global.backgroundHeight },
     { x: global.backgroundWidth / 4, y: global.backgroundHeight / 3 },

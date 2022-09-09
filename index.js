@@ -7,12 +7,12 @@ const locationInputElement = document.querySelector(".location-input");
 locationInputElement.addEventListener("change", changeLocation);
 
 export let global = {
-    mobile: navigator.maxTouchPoints > 0 ? true : false,
-    amountOfCloudsOnScreen: 0,
-    amountOfRainOnScreen: 0,
-    amountOfRaindropsOnScreen: 0,
-    amountOfSnowfieldsOnScreen: 0,
-    amountOfSnowflakesOnScreen: 0,
-    backgroundWidth: backgroundElement.clientWidth,
-    backgroundHeight: backgroundElement.clientHeight
-}
+  mobile: navigator.maxTouchPoints > 0 ? true : false,
+  amountOfCloudsOnScreen: 0,
+  amountOfRainOnScreen: 0,
+  amountOfRaindropsOnScreen: 0,
+  amountOfSnowfieldsOnScreen: 0,
+  amountOfSnowflakesOnScreen: 0,
+  backgroundWidth: backgroundElement.clientWidth,
+  backgroundHeight: backgroundElement.clientHeight,
+};

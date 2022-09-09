@@ -31,8 +31,12 @@ export function displayWeather(data) {
     amountOfClouds: data.hourly[0].clouds,
     amountOfRainfields: data.hourly[0].pop * 10,
     amountOfRaindrops: data.hourly[0].pop * 100,
-    amountOfSnowfields: data.hourly[0].snow ? data.hourly[0].snow["1h"] * 10 : null,
-    amountOfSnowflakes: data.hourly[0].snow ? data.hourly[0].snow["1h"] * 100 : null,
+    amountOfSnowfields: data.hourly[0].snow
+      ? data.hourly[0].snow["1h"] * 10
+      : null,
+    amountOfSnowflakes: data.hourly[0].snow
+      ? data.hourly[0].snow["1h"] * 100
+      : null,
   };
 
   const timeData = {
@@ -47,7 +51,6 @@ export function displayWeather(data) {
     ),
   };
 
-  
   /*
   // Debugging
   setInterval(() => {
@@ -60,7 +63,6 @@ export function displayWeather(data) {
     );
   }, 100);
   */
- 
 
   const moonElement = document.querySelector(".moon");
   const sunElement = document.querySelector(".sun");
@@ -89,7 +91,10 @@ export function displayWeather(data) {
 }
 
 function displayWeatherData(data) {
-  locationHeaderElement.textContent = locationInputElement.value.toUpperCase() + " / " + data.timezone.split("/")[0].toUpperCase();
+  locationHeaderElement.textContent =
+    locationInputElement.value.toUpperCase() +
+    " / " +
+    data.timezone.split("/")[0].toUpperCase();
   weatherErrorElement.style.opacity = 0;
   weatherDescriptionElement.textContent =
     data.hourly[0].weather[0].description.toUpperCase();
@@ -100,13 +105,12 @@ function displayWeatherData(data) {
 
   if (data.hourly[0].snow) {
     weatherPrecipitationElement.previousElementSibling.textContent = "Snow";
+    weatherPrecipitationElement.textContent = data.hourly[0].snow["1h"] + " mm";
+  } else {
+    weatherPrecipitationElement.previousElementSibling.textContent =
+      "Precipitation";
     weatherPrecipitationElement.textContent =
-    data.hourly[0].snow["1h"] + " mm";
-  }
-  else {
-    weatherPrecipitationElement.previousElementSibling.textContent = "Precipitation";
-    weatherPrecipitationElement.textContent =
-    Math.floor(data.hourly[0].pop * 100) + " %";
+      Math.floor(data.hourly[0].pop * 100) + " %";
   }
 }
 
@@ -115,7 +119,7 @@ function fadeWeatherData(duration, data) {
     duration: duration,
     opacity: 0,
     onComplete: displayWeatherData,
-    onCompleteParams: [data]
+    onCompleteParams: [data],
   });
 
   gsap.to(weatherDataElement, {

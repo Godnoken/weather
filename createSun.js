@@ -120,13 +120,18 @@ function checkProgress(timeline, cloudData) {
   if (progress === 0) return;
 
   if (progress < 0.5) {
-
     // Calculates how bright the sky will be depending on amount of clouds and time of day
-    changeBackgroundOpacity(Math.min(0.5, (1.5 + cloudData.amountOfClouds / 100) - 1 + (progress + 0.5) * -1));
+    changeBackgroundOpacity(
+      Math.min(
+        0.5,
+        1.5 + cloudData.amountOfClouds / 100 - 1 + (progress + 0.5) * -1
+      )
+    );
   } else if (progress < 1) {
-
     // Same as above but slightly different calculation due to the sky getting darker throughout the day
-    changeBackgroundOpacity(Math.min(0.5, (cloudData.amountOfClouds / 100) - 1 - (progress * -1)));
+    changeBackgroundOpacity(
+      Math.min(0.5, cloudData.amountOfClouds / 100 - 1 - progress * -1)
+    );
   }
 }
 

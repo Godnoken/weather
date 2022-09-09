@@ -49,9 +49,7 @@ export function createRaindrop(rainfield, cloudObject) {
       ? "m0, 0s -2.45 1.75 -2.66 4.2 c -0.245 2.415 2.205 2.94 2.66 2.87 c 2.73 0.07 2.45 -2.275 2.45 -2.59 c 0 -3.15 -2.45 -4.48 -2.45 -4.48 z"
       : "m0, 0s-7 5-7.6 12c-.7 6.9 6.3 8.4 7.6 8.2 7.8.2 7-6.5 7-7.4 0-9-7-12.8-7-12.8z"
   }`;
-
   const fill = `rgb(${random(0, 50)}, ${random(0, 200)}, ${random(230, 255)})`;
-  //const fill = `rgb(0, 0, ${random(200, 255)})`;
   const moveToY = random(
     global.backgroundHeight * 2,
     global.backgroundHeight * 3
@@ -71,7 +69,7 @@ export function createRaindrop(rainfield, cloudObject) {
       cloudObject.height + cloudObject.height / 4
     ),
     // Takes the raindrop's width into consideration on spawn
-    transformOrigin: "100% 100%"
+    transformOrigin: "100% 100%",
   });
 
   timeline.to(raindropPath, {
