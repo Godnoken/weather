@@ -1,231 +1,240 @@
 * {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 html {
-    overflow: hidden;
-    font-family: 'Cairo', sans-serif;
+  overflow: hidden;
+  font-family: "Cairo", sans-serif;
 }
 
 .app-container {
-    position: fixed;
-    height: CALC(100% + 1px);
-    width: 100%;
-    color: white;
+  position: fixed;
+  height: CALC(100% + 1px);
+  width: 100%;
+  color: white;
 }
 
 .location-fieldset {
-    position: absolute;
-    left: 14px;
-    top: 14px;
-    width: 10%;
-    border-radius: 6px;
-    z-index: 4;
+  position: absolute;
+  left: 14px;
+  top: 14px;
+  width: 10%;
+  border-radius: 6px;
+  z-index: 4;
 }
 
 .location-legend {
-    padding: 0 6px;
+  padding: 0 6px;
 }
 
 .location-input {
-    width: 100%;
-    height: 100%;
-    border: none;
-    outline: none;
-    background-color: transparent;
-    color: white;
+  width: 100%;
+  height: 100%;
+  border: none;
+  outline: none;
+  background-color: transparent;
+  color: white;
 }
 
 .intro-container {
-    height: 100%;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    align-items: center;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
 }
 
 .sun {
-    position: absolute;
-    background: white;
-    border-radius: 50%;
-    box-shadow: 0 0 20px rgb(255, 255, 228), 0 0 30px rgb(255, 255, 228), 0 0 40px rgb(255, 255, 228), 0 0 50px rgb(255, 255, 228), 0 0 60px rgb(255, 255, 228), 0 0 100px rgb(255, 255, 228), 0 0 300px 50px rgb(255, 255, 255), inset 0 0 25px rgb(255, 255, 228), inset 0 0 50px rgb(255, 255, 228);
+  position: absolute;
+  background: white;
+  border-radius: 50%;
+  box-shadow: 0 0 20px rgb(255, 255, 228), 0 0 30px rgb(255, 255, 228),
+    0 0 40px rgb(255, 255, 228), 0 0 50px rgb(255, 255, 228),
+    0 0 60px rgb(255, 255, 228), 0 0 100px rgb(255, 255, 228),
+    0 0 300px 50px rgb(255, 255, 255), inset 0 0 25px rgb(255, 255, 228),
+    inset 0 0 50px rgb(255, 255, 228);
 }
 
 .sun-ray {
-    --gradientOpacity: 0.3;
-    position: absolute;
-    height: var(--height);
-    width: var(--width);
-    background: -webkit-linear-gradient(bottom, rgba(255,255,255,1) 0%, rgba(255,255,255,var(--gradientOpacity)) 50%, transparent 100%);
-    top: calc(var(--height) * -1);
-    left: var(--width);
-    border-radius: 0 0 100% 100%;
-    transform-origin: 50% calc(100% + var(--height) / 6);
-    opacity: 0.05;
+  --gradientOpacity: 0.3;
+  position: absolute;
+  height: var(--height);
+  width: var(--width);
+  background: -webkit-linear-gradient(
+    bottom,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(255, 255, 255, var(--gradientOpacity)) 50%,
+    transparent 100%
+  );
+  top: calc(var(--height) * -1);
+  left: var(--width);
+  border-radius: 0 0 100% 100%;
+  transform-origin: 50% calc(100% + var(--height) / 6);
+  opacity: 0.05;
 }
 
 .moon {
-    position: absolute;
-    background: white;
-    border-radius: 50%;
-    box-shadow: 0 0 6px white, 0 0 300px 30px white;
-    overflow: hidden;
-    z-index: 1;
+  position: absolute;
+  background: white;
+  border-radius: 50%;
+  box-shadow: 0 0 6px white, 0 0 300px 30px white;
+  overflow: hidden;
+  z-index: 1;
 }
 
 .moon::after {
-    content: "";
-    position: absolute;
-    left: -10px;
-    top: -10px;
-    width: var(--moonSize);
-    height: var(--moonSize);
-    background: transparent url("./fullMoon.webp");
-    background-size: contain;
-    opacity: 0.4;
+  content: "";
+  position: absolute;
+  left: -10px;
+  top: -10px;
+  width: var(--moonSize);
+  height: var(--moonSize);
+  background: transparent url("./fullMoon.webp");
+  background-size: contain;
+  opacity: 0.4;
 }
 
 .background {
-    --opacity: 0;
-    background: linear-gradient(rgb(64 63 102) 0%, rgba(73,89,147,1) 6%, rgba(102,147,182,1) 19%, rgba(205,247,255,1) 100%);
-    position: absolute;
-    height: 100%;
-    width: 100%;
+  --opacity: 0;
+  background: linear-gradient(
+    rgb(64 63 102) 0%,
+    rgba(73, 89, 147, 1) 6%,
+    rgba(102, 147, 182, 1) 19%,
+    rgba(205, 247, 255, 1) 100%
+  );
+  position: absolute;
+  height: 100%;
+  width: 100%;
 }
 
 .background::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgb(0, 0, 0);
-    opacity: var(--opacity);
-    transition: opacity 2s;
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgb(0, 0, 0);
+  opacity: var(--opacity);
+  transition: opacity 2s;
 }
 
 .background::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: linear-gradient(
-    rgba(0, 0, 0, 0.2) 0%,
-    rgba(0, 0, 0, 1) 90%),
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: linear-gradient(rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 1) 90%),
     url("./stars.webp");
-    background-size: cover;
-    opacity: calc(var(--opacity) - 0.55);
-    transition: opacity 2s;
+  background-size: cover;
+  opacity: calc(var(--opacity) - 0.55);
+  transition: opacity 2s;
 }
 
-
-
 .weather-error {
-    position: absolute;
-    top: 25%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    opacity: 0;
-    font-size: 20px;
+  position: absolute;
+  top: 25%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  font-size: 20px;
 }
 
 .weather-container {
-    position: absolute;
-    width: clamp(20%, 700px, 60%);
-    height: 50%;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    display: flex;
-    flex-direction: column;
-    padding: 8px;
-    background-color: rgba(10, 10, 10, 0.94);
-    border: rgb(192, 192, 192) 2px solid;
-    border-radius: 12px;
-    opacity: 1;
-    transition: opacity 0.5s;
-    z-index: 2;
+  position: absolute;
+  width: clamp(20%, 700px, 60%);
+  height: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  padding: 8px;
+  background-color: rgba(10, 10, 10, 0.94);
+  border: rgb(192, 192, 192) 2px solid;
+  border-radius: 12px;
+  transition: opacity 0.5s;
+  z-index: 2;
 }
 
 .weather-container:hover {
-    opacity: 0.96 !important;
+  opacity: 0.96 !important;
 }
 
 .weather-location {
-    position: absolute;
-    top: 0;
-    left: 0;
-    margin: 6px 14px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: 6px 14px;
 }
 
 .weather-data-container {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-    opacity: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  opacity: 0;
 }
 
 .weather-description {
-    text-align: center;
-    margin: 0;
+  text-align: center;
+  margin: 0;
 }
 
 .weather-temperature-container {
-    display: flex;
-    justify-content: space-evenly;
+  display: flex;
+  justify-content: space-evenly;
 }
 
 .weather-miscellaneous-container {
-    display: flex;
-    justify-content: space-evenly;
+  display: flex;
+  justify-content: space-evenly;
 }
 
 .weather-temperature {
-    display: flex;
-    justify-content: center;
-    column-gap: 4px;
+  display: flex;
+  justify-content: center;
+  column-gap: 4px;
 }
 
 .weather-snippet-title {
-    font-weight: bolder;
+  font-weight: bolder;
 }
 
 .weather-data-snippet {
-    text-align: center;
+  text-align: center;
 }
 
 @media only screen and (max-width: 950px) {
-    .background {
-        height: 40%;
-        z-index: 3;
-    }
+  .background {
+    height: 40%;
+    z-index: 3;
+  }
 
-    .intro-text {
-        font-size: 16px;
-    }
+  .intro-text {
+    font-size: 16px;
+  }
 
-    .weather-container {
-        top: calc(40% - 1px);
-        left: 0;
-        width: 100%;
-        height: 60%;
-        transform: translate(0px, 0px);
-        border: none;
-        border-radius: 0;
-        opacity: 1;
-        background-color: rgb(10, 10, 10);
-    }
+  .weather-container {
+    top: calc(40% - 1px);
+    left: 0;
+    width: 100%;
+    height: 60%;
+    transform: translate(0px, 0px);
+    border: none;
+    border-radius: 0;
+    opacity: 1;
+    background-color: rgb(10, 10, 10);
+  }
 
-    .weather-container:hover {
-        opacity: 1;
-    }
+  .weather-container:hover {
+    opacity: 1;
+  }
 
-    .weather-location {
-        font-size: 14px;
-    }
+  .weather-location {
+    font-size: 14px;
+  }
 }

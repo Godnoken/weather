@@ -93,7 +93,7 @@ export function displayWeather(data) {
     createSun(timeData, cloudData);
     createClouds(cloudData);
     fadeWeatherData(0, data);
-    fadeWeatherContainer();
+    global.mobile ? null : fadeWeatherContainer();
   }
 }
 
