@@ -47,43 +47,20 @@ export function displayWeather(data) {
     ),
   };
 
+  
   /*
-      switch (data.current.weather[0].main) {
-          case "Clouds":
-              
-              break;
-          case "Rain":
-              
-              break;
-          case "Thunderstorm":
-              
-              break;
-          case "Drizzle":
-              d
-              break;
-          case "Snow":
-              
-              break;
-          case "Atmosphere":
-              
-              break;
-          case "Clear":
-              
-              break;
-      }
-      */
-
   // Debugging
-
-  /*
   setInterval(() => {
     console.log(
       global.amountOfRaindropsOnScreen,
       global.amountOfRainOnScreen,
-      global.amountOfCloudsOnScreen
+      global.amountOfCloudsOnScreen,
+      global.amountOfSnowfieldsOnScreen,
+      global.amountOfSnowflakesOnScreen
     );
   }, 100);
- */
+  */
+ 
 
   const moonElement = document.querySelector(".moon");
   const sunElement = document.querySelector(".sun");

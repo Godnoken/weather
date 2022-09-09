@@ -42,9 +42,9 @@ function createCloud(cloudData) {
 
   const width = global.mobile ? 50 : 400;
   const height = global.mobile ? 25 : 200;
-  const x = random(width / 1.5, global.backgroundWidth);
+  const x = random(width, global.backgroundWidth);
   const y = random(height, global.backgroundHeight);
-  const moveToX = global.backgroundWidth + x;
+  const moveToX = global.backgroundWidth + x / 2;
   const moveToY = random(25, 100);
 
   // Speed determined by how high up the cloud is in the atmosphere
@@ -59,7 +59,7 @@ function createCloud(cloudData) {
     height: height,
     opacity: 0,
     zIndex: 1,
-    scale: random(0.7, 1.2)
+    scale: random(0.7, 1)
   });
 
   // Makes new svg fully visible after 8 seconds
@@ -122,7 +122,6 @@ function createCloud(cloudData) {
         (cloudData.amountOfRainfields > 0 && global.amountOfRainOnScreen === 0)
       ) {
         createRainfield(cloudSVG, cloudData.amountOfRaindrops);
-        cloudSVG.dataset.rainfield = true;
       }
     }
   }, 2000);
@@ -132,9 +131,12 @@ function createCloud(cloudData) {
     cloudSVG.remove();
     global.amountOfCloudsOnScreen--;
 
-    if (cloudSVG.dataset.rainfield) {
+    if (cloudSVG.dataset.raindrops) {
       global.amountOfRainOnScreen--;
       global.amountOfRaindropsOnScreen -= cloudSVG.dataset.raindrops;
+    } else if (cloudSVG.dataset.snowflakes) {
+      global.amountOfSnowfieldsOnScreen--;
+      global.amountOfSnowflakesOnScreen -= cloudSVG.dataset.snowflakes;
     }
 
     // Not sure why, but after refactoring to creating
