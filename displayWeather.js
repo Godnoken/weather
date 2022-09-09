@@ -9,8 +9,10 @@ import { createSun } from "./createSun.js";
 const animatedBackgroundElement = document.querySelector(
   ".animated-background"
 );
+const introContainerElement = document.querySelector(".intro-container");
 const locationInputElement = document.querySelector(".location-input");
 const locationHeaderElement = document.querySelector(".weather-location");
+const weatherContainerElement = document.querySelector(".weather-container");
 const weatherDataElement = document.querySelector(".weather-data-container");
 const weatherDescriptionElement = document.querySelector(
   ".weather-description"
@@ -51,6 +53,9 @@ export function displayWeather(data) {
     ),
   };
 
+  // Hide welcome text
+  introContainerElement.style.display = "none";
+
   /*
   // Debugging
   setInterval(() => {
@@ -83,10 +88,12 @@ export function displayWeather(data) {
       duration: 2,
       opacity: 1,
     });
+
   } else {
     createSun(timeData, cloudData);
     createClouds(cloudData);
     fadeWeatherData(0, data);
+    fadeWeatherContainer();
   }
 }
 
@@ -127,6 +134,14 @@ function fadeWeatherData(duration, data) {
     duration: 2,
     opacity: 1,
   });
+}
+
+function fadeWeatherContainer() {
+  gsap.to(weatherContainerElement, {
+    delay: 2,
+    duration: 2,
+    opacity: 0.3
+  })
 }
 
 function initiateNewLocation(timeData, cloudData) {
