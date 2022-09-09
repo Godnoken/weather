@@ -16,8 +16,8 @@ export function createRainfield(cloud, amountOfRaindrops) {
 
   const cloudObject = {
     width: cloud.clientWidth,
-    height: cloud.clientHeight
-  }
+    height: cloud.clientHeight,
+  };
   let amountOfRaindropsInCloud = 0;
   global.amountOfRainOnScreen++;
 
@@ -44,18 +44,20 @@ export function createRainfield(cloud, amountOfRaindrops) {
 export function createRaindrop(rainfield, cloudObject) {
   const raindropPath = createPath();
 
-  const d = `m${random(cloudObject.width / 4, cloudObject.width - cloudObject.width / 4)},${random(
-    cloudObject.height - cloudObject.height / 4,
-    cloudObject.height + cloudObject.height / 4
-  )}c0,0 -6.96763,5.04017 -7.62085,11.97041c-0.65322,6.93024 6.31441,8.40028 7.62085,8.19028c7.83858,0.21001 6.96763,-6.51022 6.96763,-7.35025c0,-9.03031 -6.96763,-12.81043 -6.96763,-12.81043z`;
+  const d = `${
+    global.mobile
+      ? "m0, 0s -2.45 1.75 -2.66 4.2 c -0.245 2.415 2.205 2.94 2.66 2.87 c 2.73 0.07 2.45 -2.275 2.45 -2.59 c 0 -3.15 -2.45 -4.48 -2.45 -4.48 z"
+      : "m0, 0s-7 5-7.6 12c-.7 6.9 6.3 8.4 7.6 8.2 7.8.2 7-6.5 7-7.4 0-9-7-12.8-7-12.8z"
+  }`;
+
   const fill = `rgb(${random(0, 50)}, ${random(0, 200)}, ${random(230, 255)})`;
   //const fill = `rgb(0, 0, ${random(200, 255)})`;
   const moveToY = random(
-    global.backgroundHeight + 2000,
-    global.backgroundHeight + 6000
+    global.backgroundHeight * 2,
+    global.backgroundHeight * 3
   );
-  const moveDuration = random(250, 500);
-  const delay = random(4, 12);
+  const moveDuration = random(100, 150);
+  const delay = random(4, 14);
 
   const timeline = gsap.timeline();
 
@@ -63,7 +65,13 @@ export function createRaindrop(rainfield, cloudObject) {
     attr: { d: d },
     fill: fill,
     opacity: 0,
-    scale: global.mobile ? 0.35 : 1
+    x: random(cloudObject.width / 4, cloudObject.width - cloudObject.width / 4),
+    y: random(
+      cloudObject.height - cloudObject.height / 4,
+      cloudObject.height + cloudObject.height / 4
+    ),
+    // Takes the raindrop's width into consideration on spawn
+    transformOrigin: "100% 100%"
   });
 
   timeline.to(raindropPath, {

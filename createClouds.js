@@ -42,7 +42,7 @@ function createCloud(cloudData) {
 
   const width = global.mobile ? 50 : 400;
   const height = global.mobile ? 25 : 200;
-  const x = random(width, global.backgroundWidth);
+  const x = random(width, global.backgroundWidth * 0.8);
   const y = random(height, global.backgroundHeight);
   const moveToX = global.backgroundWidth + x / 2;
   const moveToY = random(25, 100);
