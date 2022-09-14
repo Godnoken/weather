@@ -7,6 +7,7 @@ const animatedBackgroundElement = document.querySelector(
 );
 const backgroundElement = document.querySelector(".background");
 
+// Used to throttle background opacity
 let scheduledAnimationFrame;
 
 export function createSun(timeData, cloudData) {
@@ -37,11 +38,12 @@ export function createSun(timeData, cloudData) {
   }
 
   animatedBackgroundElement.appendChild(sunElement);
-  const sunTimeline = gsap.timeline();
 
   const sunElementWidth = global.mobile ? 25 : 100;
   const sunElementHeight = global.mobile ? 25 : 100;
+  const sunTimeline = gsap.timeline();
 
+  // Set the sun's position & size & opacity
   sunTimeline.set(sunElement, {
     x: 0,
     y: global.backgroundHeight,
@@ -50,6 +52,7 @@ export function createSun(timeData, cloudData) {
     opacity: 0,
   });
 
+  // The sun's travel path
   const path = [
     { x: 0, y: global.backgroundHeight },
     { x: global.backgroundWidth / 4, y: global.backgroundHeight / 3 },
@@ -66,16 +69,11 @@ export function createSun(timeData, cloudData) {
 
   const motionPath = {
     path: path,
+    // Curviness makes the sun move in a curve rather than statically from a to b
     curviness: 1.5,
   };
 
-  let rawPath = MotionPathPlugin.getRawPath(path),
-    point;
-
-  MotionPathPlugin.cacheRawPathMeasurements(rawPath);
-
-  point = MotionPathPlugin.getPositionOnPath(rawPath, 0.5, true);
-
+  // Make sun move along path
   sunTimeline.to(sunElement, {
     motionPath: motionPath,
     duration: secondsOfSunshine,
@@ -86,13 +84,17 @@ export function createSun(timeData, cloudData) {
     onCompleteParams: [sunElement, timeData, cloudData],
   });
 
+  // Set sun's position to wherever it should be in real life
   sunTimeline.progress(currentSunPosition);
 
   // Separate timeline due to progress being set above
-  // in turn cancelling the opacity animation
+  // which in turn cancels the opacity animation
   gsap.to(sunElement, {
     delay: 2,
     duration: 4,
+
+    // Sun's opacity is based on the amount of clouds in the sky
+    // 1.3 is there so it will always be visible to some degree
     opacity: 1.3 - cloudData.amountOfClouds / 100,
   });
 
@@ -100,6 +102,7 @@ export function createSun(timeData, cloudData) {
   checkProgress(sunTimeline, cloudData);
 }
 
+// Throttle onUpdate so we don't check & update background's opacity every tick
 function throttle(timeline, cloudData) {
   if (scheduledAnimationFrame) {
     return;
@@ -110,13 +113,14 @@ function throttle(timeline, cloudData) {
   setTimeout(() => checkProgress(timeline, cloudData), 20000);
 }
 
+// Checks sun's progress so we know how dark or bright the sky should be
 function checkProgress(timeline, cloudData) {
   scheduledAnimationFrame = false;
 
   const progress = timeline.progress();
 
-  // Prevents the throttle to trigger opacity switch when it shouldn't because of setTimeout
-  // if changing between locations fast
+  // If user switch locations fast, this will prevent setTimeout to trigger opacity switch
+  // when it shouldn't
   if (progress === 0) return;
 
   if (progress < 0.5) {
@@ -145,6 +149,7 @@ function createSunRays(sunElementWidth, sunElementHeight) {
   let rotationDegree = 10;
   let stronger = 1;
 
+  // Iterate 36 times so we have sun rays on all 360 degrees around the sun
   for (let i = 0; i < 36; i++) {
     const rayElement = document.createElement("div");
     rayElement.classList.add("sun-ray");
@@ -154,6 +159,7 @@ function createSunRays(sunElementWidth, sunElementHeight) {
     rayElement.style.setProperty("--width", `${sunElementWidth / 3}px`);
     rayElement.style.setProperty("--height", `${sunElementHeight * 3}px`);
 
+    // Very visible ray
     if (stronger === 3) {
       stronger = 0;
       rayElement.style.opacity = random(0.1, 0.16);
@@ -169,6 +175,7 @@ function createSunRays(sunElementWidth, sunElementHeight) {
 }
 
 function swapFromSunToMoon(sunElement, timeData, cloudData) {
+  // Remove sun & its tweens
   gsap.killTweensOf(sunElement);
   sunElement.remove();
 

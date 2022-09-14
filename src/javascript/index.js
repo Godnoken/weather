@@ -9,7 +9,7 @@ locationInputElement.addEventListener("change", changeLocation);
 export let global = {
   mobile: navigator.maxTouchPoints > 0 ? true : false,
   amountOfCloudsOnScreen: 0,
-  amountOfRainOnScreen: 0,
+  amountOfRainfieldsOnScreen: 0,
   amountOfRaindropsOnScreen: 0,
   amountOfSnowfieldsOnScreen: 0,
   amountOfSnowflakesOnScreen: 0,

@@ -51,6 +51,8 @@ export async function changeLocation(event) {
     coordinatesData[0].lon
   );
 
+  // Debugging
   console.log(weatherData);
+  
   displayWeather(weatherData);
 }

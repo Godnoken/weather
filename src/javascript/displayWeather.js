@@ -29,6 +29,19 @@ const weatherHumidityElement = document.querySelector(".weather-humidity");
 const weatherErrorElement = document.querySelector(".weather-error");
 
 export function displayWeather(data) {
+  /*
+  // Debugging
+  setInterval(() => {
+    console.log(
+      global.amountOfRaindropsOnScreen,
+      global.amountOfRainfieldsOnScreen,
+      global.amountOfCloudsOnScreen,
+      global.amountOfSnowfieldsOnScreen,
+      global.amountOfSnowflakesOnScreen
+    );
+  }, 100);
+  */
+
   const cloudData = {
     amountOfClouds: data.hourly[0].clouds,
     amountOfRainfields: data.hourly[0].pop * 10,
@@ -56,39 +69,14 @@ export function displayWeather(data) {
   // Hide welcome text
   introContainerElement.style.display = "none";
 
-  /*
-  // Debugging
-  setInterval(() => {
-    console.log(
-      global.amountOfRaindropsOnScreen,
-      global.amountOfRainOnScreen,
-      global.amountOfCloudsOnScreen,
-      global.amountOfSnowfieldsOnScreen,
-      global.amountOfSnowflakesOnScreen
-    );
-  }, 100);
-  */
-
   const moonElement = document.querySelector(".moon");
   const sunElement = document.querySelector(".sun");
 
   // Checks if moon or sun already exists so we can do a smooth transition
   if (moonElement || sunElement) {
-    gsap.to(animatedBackgroundElement, {
-      duration: 2,
-      opacity: 0,
-      onComplete: initiateNewLocation,
-      onCompleteParams: [timeData, cloudData],
-    });
-
+    fadeOutAnimatedBackground(timeData, cloudData);
     fadeWeatherData(2, data);
-
-    gsap.to(animatedBackgroundElement, {
-      delay: 2,
-      duration: 2,
-      opacity: 1,
-    });
-
+    fadeInAnimatedBackground();
   } else {
     createSun(timeData, cloudData);
     createClouds(cloudData);
@@ -140,25 +128,42 @@ function fadeWeatherContainer() {
   gsap.to(weatherContainerElement, {
     delay: 2,
     duration: 2,
-    opacity: 0.3
-  })
+    opacity: 0.3,
+  });
+}
+
+function fadeOutAnimatedBackground(timeData, cloudData) {
+  gsap.to(animatedBackgroundElement, {
+    duration: 2,
+    opacity: 0,
+    onComplete: initiateNewLocation,
+    onCompleteParams: [timeData, cloudData],
+  });
+}
+
+function fadeInAnimatedBackground() {
+  gsap.to(animatedBackgroundElement, {
+    delay: 2,
+    duration: 2,
+    opacity: 1,
+  });
 }
 
 function initiateNewLocation(timeData, cloudData) {
-  // Kill all tweens before removing the DOM elements
+  // Clean up before changing location
   killAllTweens();
-
-  // Clear all remaining SVG's and set counts back to 0
   removeAllElementChildren(animatedBackgroundElement);
   resetAllSVGCounts();
 
+  // Will check if sun is up, otherwise createSun will trigger createMoon
   createSun(timeData, cloudData);
+
   createClouds(cloudData);
 }
 
 function resetAllSVGCounts() {
   global.amountOfCloudsOnScreen = 0;
-  global.amountOfRainOnScreen = 0;
+  global.amountOfRainfieldsOnScreen = 0;
   global.amountOfRaindropsOnScreen = 0;
   global.amountOfSnowfieldsOnScreen = 0;
   global.amountOfSnowflakesOnScreen = 0;

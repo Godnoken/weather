@@ -7,6 +7,7 @@ const animatedBackgroundElement = document.querySelector(
 );
 const backgroundElement = document.querySelector(".background");
 
+// Used to throttle background opacity
 let scheduledAnimationFrame;
 
 export function createMoon(timeData, cloudData) {
@@ -40,11 +41,12 @@ export function createMoon(timeData, cloudData) {
   }
 
   animatedBackgroundElement.appendChild(moonElement);
-  const moonTimeline = gsap.timeline();
 
   const moonElementWidth = global.mobile ? 25 : 100;
   const moonElementHeight = global.mobile ? 25 : 100;
+  const moonTimeline = gsap.timeline();
 
+  // Set the moon's position & size & opacity
   moonTimeline.set(moonElement, {
     x: 0,
     y: global.backgroundHeight,
@@ -53,8 +55,10 @@ export function createMoon(timeData, cloudData) {
     opacity: 0,
   });
 
+  // Sets moon's crater image size so it fits the moon element
   moonElement.style.setProperty("--moonSize", moonElementWidth + 20 + "px");
 
+  // The moon's travel path
   const path = [
     { x: 0, y: global.backgroundHeight },
     { x: global.backgroundWidth / 4, y: global.backgroundHeight / 3 },
@@ -71,17 +75,11 @@ export function createMoon(timeData, cloudData) {
 
   const motionPath = {
     path: path,
+    // Curviness makes the sun move in a curve rather than statically from a to b
     curviness: 1.5,
-    alignOrigin: [0.5, 0.5],
   };
 
-  let rawPath = MotionPathPlugin.getRawPath(path),
-    point;
-
-  MotionPathPlugin.cacheRawPathMeasurements(rawPath);
-
-  point = MotionPathPlugin.getPositionOnPath(rawPath, 0.5, true);
-
+  // Make moon move along path
   moonTimeline.to(
     moonElement,
     {
@@ -96,10 +94,12 @@ export function createMoon(timeData, cloudData) {
     0
   );
 
+  // Set moon's position to wherever it should be in real life
+  // (well, not quite. We are assuming the moon & sun move exactly the same)
   moonTimeline.progress(currentMoonPosition);
 
   // Separate timeline due to progress being set above
-  // in turn cancelling the opacity animation
+  // which in turn cancels the opacity animation
   gsap.to(moonElement, {
     delay: 2,
     duration: 4,
@@ -109,6 +109,7 @@ export function createMoon(timeData, cloudData) {
   checkProgress(moonTimeline);
 }
 
+// Throttle onUpdate so we don't check & update background's opacity every tick
 function throttle(timeline) {
   if (scheduledAnimationFrame) {
     return;
@@ -124,10 +125,11 @@ function checkProgress(timeline) {
 
   const progress = timeline.progress();
 
-  // Prevents the throttle to trigger opacity switch when it shouldn't because of setTimeout
-  // if changing between locations fast
+  // If user switch locations fast, this will prevent setTimeout to trigger opacity switch
+  // when it shouldn't
   if (progress === 0) return;
 
+  // Calculates how bright the sky will be depending on time of day
   if (progress < 0.5) {
     changeBackgroundOpacity(progress + 0.5);
   } else if (progress < 1) {
@@ -140,6 +142,7 @@ function changeBackgroundOpacity(progress) {
 }
 
 function swapFromMoonToSun(moonElement, timeData, cloudData) {
+  // Remove moon & its tweens
   gsap.killTweensOf(moonElement);
   moonElement.remove();
 
