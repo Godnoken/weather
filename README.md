@@ -1,6 +1,6 @@
-# weather
+# Live weather (gif below)
 
-
+![gif showing live weather](https://github.com/Godnoken/gifdemos/blob/main/weather.gif)
 
 ### Live
 https://godnoken.github.io/weather/
@@ -23,7 +23,7 @@ I have used real time data from the https://openweathermap.org/ api "One Call 3.
 
 All data retrieved & displayed is based on the hour of the day. <br>
 
-Sun & moon's position is based on the time of the day and moves in an arch (If you leave the page running, it will move to the end in real time. Although you can not switch tabs as that will its movement) <br>
+Sun & moon's position is based on the time of the day and moves in an arch (If you leave the page running, it will move to the end in real time. Although you can not switch tabs as that will stop its movement) <br>
 
 Sky changes colour depending on the time of the day and cloud coverage <br>
 
